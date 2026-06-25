@@ -56,7 +56,7 @@ export default function Navbar({ onSearchClick, onAuthorsClick }: NavbarProps) {
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/5 bg-neutral-900/40 hover:bg-neutral-900/80 transition-all duration-300 text-neutral-400 hover:text-white text-xs select-none cursor-pointer font-bold"
           >
             <span>🪿</span>
-            <span className="hidden xs:inline">Авторы</span>
+            <span className="hidden sm:inline">Авторы</span>
           </button>
 
           {/* Scroll to Calculator */}
