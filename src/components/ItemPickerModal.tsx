@@ -139,8 +139,8 @@ export default function ItemPickerModal({ isOpen, onClose, onSelect, lang }: Ite
                     <span className="text-[10px] sm:text-xs font-bold text-neutral-300 group-hover:text-amber-400 line-clamp-2 leading-tight">
                       {lang === 'ru' ? item.name : item.englishName}
                     </span>
-                    <span className="text-[10px] text-amber-500/80 font-mono mt-1">
-                      {item.value}★
+                    <span className="text-[10px] text-amber-500/80 font-mono mt-1 whitespace-nowrap overflow-hidden max-w-full px-1">
+                      {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))}★
                     </span>
                   </button>
                 ))}

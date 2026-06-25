@@ -34,6 +34,11 @@ export default function TradeCalculator({
   const totalA = sideA.reduce((sum, item) => sum + item.value, 0);
   const totalB = sideB.reduce((sum, item) => sum + item.value, 0);
 
+  const totalALow = sideA.reduce((sum, item) => sum + item.valueLow, 0);
+  const totalAHigh = sideA.reduce((sum, item) => sum + item.valueHigh, 0);
+  const totalBLow = sideB.reduce((sum, item) => sum + item.valueLow, 0);
+  const totalBHigh = sideB.reduce((sum, item) => sum + item.valueHigh, 0);
+
   // Calculate percentage difference relative to Side A
   const getVerdict = () => {
     if (sideA.length === 0 && sideB.length === 0) {
@@ -188,8 +193,8 @@ export default function TradeCalculator({
                       </span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs font-bold text-amber-400 font-mono">
-                        {Number(item.value.toFixed(2))}★
+                      <span className="text-xs font-bold text-amber-400 font-mono whitespace-nowrap overflow-hidden px-1">
+                        {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))}★
                       </span>
                       <button
                         onClick={() => onRemoveFromSideA(idx)}
@@ -218,7 +223,9 @@ export default function TradeCalculator({
 
             <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
               <span className="text-neutral-400">{t('calc.total', lang)}</span>
-              <span className="text-base text-violet-400">{Number(totalA.toFixed(2))}★</span>
+              <span className="text-base text-violet-400 whitespace-nowrap">
+                {totalALow !== totalAHigh ? `${Number(totalALow.toFixed(2))} - ${Number(totalAHigh.toFixed(2))}` : Number(totalA.toFixed(2))}★
+              </span>
             </div>
           </div>
 
@@ -251,8 +258,8 @@ export default function TradeCalculator({
                       </span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs font-bold text-amber-400 font-mono">
-                        {Number(item.value.toFixed(2))}★
+                      <span className="text-xs font-bold text-amber-400 font-mono whitespace-nowrap overflow-hidden px-1">
+                        {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))}★
                       </span>
                       <button
                         onClick={() => onRemoveFromSideB(idx)}
@@ -281,7 +288,9 @@ export default function TradeCalculator({
 
             <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
               <span className="text-neutral-400">{t('calc.total', lang)}</span>
-              <span className="text-base text-emerald-400">{Number(totalB.toFixed(2))}★</span>
+              <span className="text-base text-emerald-400 whitespace-nowrap">
+                {totalBLow !== totalBHigh ? `${Number(totalBLow.toFixed(2))} - ${Number(totalBHigh.toFixed(2))}` : Number(totalB.toFixed(2))}★
+              </span>
             </div>
           </div>
         </div>
