@@ -73,12 +73,25 @@ export default function AuthorsModal({ isOpen, onClose }: AuthorsModalProps) {
               {/* Creator Card */}
               <div className="p-5 rounded-2xl bg-gradient-to-br from-neutral-900/80 to-neutral-950/80 border border-white/5 relative overflow-hidden flex flex-col items-center text-center space-y-4">
                 
-                {/* Honeycomb Glow Avatar Placeholder */}
+                {/* Honeycomb Glow Avatar */}
                 <div className="relative">
                   <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-400 blur-md opacity-50 animate-pulse" />
-                  <div className="relative h-20 w-20 rounded-full border-2 border-amber-500 bg-neutral-950 flex items-center justify-center shadow-inner">
-                    {/* Golden Goose Logo Icon */}
-                    <span className="text-3xl">🪿</span>
+                  <div className="relative h-20 w-20 rounded-full border-2 border-amber-500 bg-neutral-950 overflow-hidden flex items-center justify-center shadow-lg">
+                    <img 
+                      src="./avatar.jpg" 
+                      alt="happy goose avatar" 
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        const parent = (e.target as HTMLElement).parentElement;
+                        if (parent) {
+                          const span = document.createElement('span');
+                          span.className = 'text-3xl';
+                          span.innerText = '🪿';
+                          parent.appendChild(span);
+                        }
+                      }}
+                    />
                   </div>
                   <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-black text-neutral-950 shadow-md">
                     👑
