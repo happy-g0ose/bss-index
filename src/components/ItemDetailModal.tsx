@@ -143,7 +143,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
               <div className="text-center md:text-left">
                 <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">Базовая ценность</div>
                 <div className="text-xl md:text-2xl font-black text-amber-400 font-mono mt-0.5">
-                  {item.value} <span className="text-xs font-normal text-amber-500">★</span>
+                  {Number(item.value.toFixed(2))} <span className="text-xs font-normal text-amber-500">★</span>
                 </div>
               </div>
               <div className="text-center md:text-left">

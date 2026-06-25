@@ -173,7 +173,7 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
           <div className="text-left">
             <div className="text-[10px] text-neutral-500 uppercase tracking-widest">Ценность</div>
             <div className="text-base font-black text-amber-400 font-mono flex items-center gap-0.5">
-              {item.value} <span className="text-[10px] font-normal text-amber-500">★</span>
+              {Number(item.value.toFixed(2))} <span className="text-[10px] font-normal text-amber-500">★</span>
             </div>
           </div>
           <div className="text-center">

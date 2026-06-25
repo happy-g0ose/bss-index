@@ -144,7 +144,7 @@ export default function TradeCalculator({
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <span className="text-xs font-bold text-amber-400 font-mono">
-                          {item.value}★
+                          {Number(item.value.toFixed(2))}★
                         </span>
                         <button
                           onClick={() => onRemoveFromSideA(idx)}
@@ -166,7 +166,7 @@ export default function TradeCalculator({
 
           <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
             <span className="text-neutral-400">Итоговая ценность:</span>
-            <span className="text-base text-violet-400">{totalA}★</span>
+            <span className="text-base text-violet-400">{Number(totalA.toFixed(2))}★</span>
           </div>
         </div>
 
@@ -202,7 +202,7 @@ export default function TradeCalculator({
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         <span className="text-xs font-bold text-amber-400 font-mono">
-                          {item.value}★
+                          {Number(item.value.toFixed(2))}★
                         </span>
                         <button
                           onClick={() => onRemoveFromSideB(idx)}
@@ -224,7 +224,7 @@ export default function TradeCalculator({
 
           <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
             <span className="text-neutral-400">Итоговая ценность:</span>
-            <span className="text-base text-emerald-400">{totalB}★</span>
+            <span className="text-base text-emerald-400">{Number(totalB.toFixed(2))}★</span>
           </div>
         </div>
       </div>
