@@ -2,15 +2,18 @@ import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Info, Clock, Compass } from 'lucide-react';
 import type { BSSItem } from '../data/items';
+import type { Language } from '../locales';
+import { t, translateDemand, translateStability, translateCategory } from '../locales';
 
 interface ItemDetailModalProps {
   item: BSSItem | null;
   onClose: () => void;
   onAddToSideA: (item: BSSItem) => void;
   onAddToSideB: (item: BSSItem) => void;
+  lang: Language;
 }
 
-export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSideB }: ItemDetailModalProps) {
+export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSideB, lang }: ItemDetailModalProps) {
   // Lock background scroll when open
   useEffect(() => {
     if (item) {
@@ -103,7 +106,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
               <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded border ${item.badgeColor}`}>
                 {item.rarity}
               </span>
-              <span className="text-xs text-neutral-400 font-semibold">• &nbsp; {item.category}</span>
+              <span className="text-xs text-neutral-400 font-semibold">• &nbsp; {translateCategory(item.category, lang)}</span>
             </div>
             
             <button
@@ -130,10 +133,10 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
               </div>
               <div>
                 <h2 className="text-2xl md:text-3xl font-black text-neutral-50 tracking-tight leading-none">
-                  {item.name}
+                  {lang === 'ru' ? item.name : item.englishName}
                 </h2>
                 <span className="text-xs md:text-sm text-neutral-500 font-mono block mt-1.5">
-                  {item.englishName}
+                  {lang === 'ru' ? item.englishName : item.name}
                 </span>
               </div>
             </div>
@@ -141,30 +144,30 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
             {/* Core Stats Badge Grid */}
             <div className="grid grid-cols-3 gap-4 border-y border-white/5 py-4">
               <div className="text-center md:text-left">
-                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">Базовая ценность</div>
+                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.baseValue', lang)}</div>
                 <div className="text-xl md:text-2xl font-black text-amber-400 font-mono mt-0.5">
                   {Number(item.value.toFixed(2))} <span className="text-xs font-normal text-amber-500">★</span>
                 </div>
               </div>
               <div className="text-center md:text-left">
-                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">Уровень спроса</div>
+                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.demandLevel', lang)}</div>
                 <span className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded border inline-block mt-1 ${
                   item.demand === 'Хайп' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
                   item.demand === 'Высокий' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                   item.demand === 'Средний' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
                   'bg-neutral-800 text-neutral-400 border-neutral-700'
                 }`}>
-                  {item.demand}
+                  {translateDemand(item.demand, lang)}
                 </span>
               </div>
               <div className="text-center md:text-left">
-                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">Стабильность</div>
+                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.stability', lang)}</div>
                 <span className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded border inline-block mt-1 ${
                   item.stability === 'Растет' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                   item.stability === 'Падает' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
                   'bg-neutral-800 text-neutral-400 border-neutral-700'
                 }`}>
-                  {item.stability}
+                  {translateStability(item.stability, lang)}
                 </span>
               </div>
             </div>
@@ -173,7 +176,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
             <div className="space-y-2">
               <h4 className="text-xs uppercase font-bold tracking-widest text-neutral-400 flex items-center gap-1.5 select-none">
                 <Info className="h-4 w-4 text-amber-400" />
-                Описание предмета
+                {t('item.desc', lang)}
               </h4>
               <p className="text-sm md:text-base text-neutral-300 leading-relaxed font-sans font-medium">
                 {item.description}
@@ -184,7 +187,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
             <div className="space-y-3">
               <h4 className="text-xs uppercase font-bold tracking-widest text-neutral-400 flex items-center gap-1.5 select-none">
                 <Clock className="h-4 w-4 text-blue-400" />
-                Динамика изменения ценности (6 недель)
+                {t('item.chart', lang)}
               </h4>
               
               <div className="relative rounded-xl bg-neutral-950/60 border border-white/5 p-4 overflow-hidden">

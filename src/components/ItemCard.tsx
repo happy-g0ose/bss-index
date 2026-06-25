@@ -3,6 +3,8 @@ import type { MouseEvent } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus, Plus } from 'lucide-react';
 import type { BSSItem } from '../data/items';
+import type { Language } from '../locales';
+import { t, translateDemand, translateStability } from '../locales';
 
 interface ItemCardProps {
   item: BSSItem;
@@ -10,9 +12,10 @@ interface ItemCardProps {
   onAddToSideA: (item: BSSItem) => void;
   onAddToSideB: (item: BSSItem) => void;
   index: number;
+  lang: Language;
 }
 
-export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, index }: ItemCardProps) {
+export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, index, lang }: ItemCardProps) {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -42,20 +45,20 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
       case 'Растет':
         return (
           <span className="flex items-center gap-1 text-emerald-400 text-xs font-semibold">
-            <TrendingUp className="h-3.5 w-3.5" /> Растет
+            <TrendingUp className="h-3.5 w-3.5" /> {t('item.stability.up', lang)}
           </span>
         );
       case 'Падает':
         return (
           <span className="flex items-center gap-1 text-red-400 text-xs font-semibold">
-            <TrendingDown className="h-3.5 w-3.5" /> Падает
+            <TrendingDown className="h-3.5 w-3.5" /> {t('item.stability.down', lang)}
           </span>
         );
       case 'Стабильно':
       default:
         return (
           <span className="flex items-center gap-1 text-neutral-400 text-xs font-semibold">
-            <Minus className="h-3.5 w-3.5" /> Стабильно
+            <Minus className="h-3.5 w-3.5" /> {t('item.stability.stable', lang)}
           </span>
         );
     }
@@ -158,10 +161,10 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-base font-bold text-neutral-100 group-hover:text-white transition-colors truncate">
-            {item.name}
+            {lang === 'ru' ? item.name : item.englishName}
           </h3>
           <span className="text-xs text-neutral-400 font-mono block">
-            {item.englishName}
+            {lang === 'ru' ? item.englishName : item.name}
           </span>
         </div>
       </div>
@@ -171,19 +174,19 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
         {/* Core details */}
         <div className="flex justify-between items-center text-xs select-none">
           <div className="text-left">
-            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">Ценность</div>
+            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.value', lang)}</div>
             <div className="text-base font-black text-amber-400 font-mono flex items-center gap-0.5">
               {Number(item.value.toFixed(2))} <span className="text-[10px] font-normal text-amber-500">★</span>
             </div>
           </div>
           <div className="text-center">
-            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">Спрос</div>
+            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.demand', lang)}</div>
             <span className={`text-[10px] font-bold px-2 py-0.5 rounded border block mt-0.5 ${getDemandColor(item.demand)}`}>
-              {item.demand}
+              {translateDemand(item.demand, lang)}
             </span>
           </div>
           <div className="text-right">
-            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">Стабильность</div>
+            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.stability', lang)}</div>
             <div className="mt-0.5 flex justify-end">
               {getStabilityIcon(item.stability)}
             </div>
@@ -200,7 +203,7 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
             className="flex items-center justify-center gap-1 py-1.5 rounded-lg border border-violet-500/25 bg-violet-600/10 hover:bg-violet-600/25 hover:border-violet-500/50 text-[10px] font-bold text-violet-300 transition-all duration-200 cursor-pointer"
           >
             <Plus className="h-3 w-3" />
-            Вам (А)
+            {t('item.addA', lang)}
           </button>
           
           <button
@@ -211,7 +214,7 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
             className="flex items-center justify-center gap-1 py-1.5 rounded-lg border border-emerald-500/25 bg-emerald-600/10 hover:bg-emerald-600/25 hover:border-emerald-500/50 text-[10px] font-bold text-emerald-300 transition-all duration-200 cursor-pointer"
           >
             <Plus className="h-3 w-3" />
-            Им (Б)
+            {t('item.addB', lang)}
           </button>
         </div>
       </div>

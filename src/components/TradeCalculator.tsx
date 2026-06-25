@@ -1,6 +1,10 @@
+import { useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scale, X, ArrowLeftRight } from 'lucide-react';
+import { Scale, X, ArrowLeftRight, Share2 } from 'lucide-react';
 import type { BSSItem } from '../data/items';
+import html2canvas from 'html2canvas';
+import type { Language } from '../locales';
+import { t } from '../locales';
 
 interface TradeCalculatorProps {
   sideA: BSSItem[];
@@ -8,6 +12,7 @@ interface TradeCalculatorProps {
   onRemoveFromSideA: (index: number) => void;
   onRemoveFromSideB: (index: number) => void;
   onClearTrade: () => void;
+  lang: Language;
 }
 
 export default function TradeCalculator({
@@ -16,8 +21,9 @@ export default function TradeCalculator({
   onRemoveFromSideA,
   onRemoveFromSideB,
   onClearTrade,
+  lang,
 }: TradeCalculatorProps) {
-  
+  const calculatorRef = useRef<HTMLElement>(null);
   const totalA = sideA.reduce((sum, item) => sum + item.value, 0);
   const totalB = sideB.reduce((sum, item) => sum + item.value, 0);
 
@@ -25,7 +31,7 @@ export default function TradeCalculator({
   const getVerdict = () => {
     if (sideA.length === 0 && sideB.length === 0) {
       return {
-        text: 'Добавьте стикеры для оценки обмена',
+        text: t('calc.verdict.empty', lang),
         style: 'bg-neutral-800/40 text-neutral-400 border-neutral-800/60',
         diffText: '',
       };
@@ -33,17 +39,17 @@ export default function TradeCalculator({
 
     if (totalA === 0 && totalB > 0) {
       return {
-        text: 'Огромный плюс',
+        text: t('calc.verdict.hugeWin', lang),
         style: 'bg-purple-500/15 text-purple-400 border-purple-500/30 shadow-lg shadow-purple-500/5',
-        diffText: 'Получаете бесплатную ценность',
+        diffText: t('calc.verdict.freeGain', lang),
       };
     }
 
     if (totalA > 0 && totalB === 0) {
       return {
-        text: 'Слив',
+        text: t('calc.verdict.hugeLoss', lang),
         style: 'bg-red-500/15 text-red-400 border-red-500/30',
-        diffText: 'Вы отдаете предметы бесплатно',
+        diffText: t('calc.verdict.freeLoss', lang),
       };
     }
 
@@ -52,57 +58,84 @@ export default function TradeCalculator({
 
     if (diffPercent < -15) {
       return {
-        text: 'Слив',
+        text: t('calc.verdict.hugeLoss', lang),
         style: 'bg-red-500/20 text-red-400 border-red-500/40 border-2 shadow-lg shadow-red-500/5',
-        diffText: `Вы теряете ${formattedDiff} от общей ценности`,
+        diffText: `${t('calc.verdict.loseMsg', lang)} ${formattedDiff}`,
       };
     } else if (diffPercent >= -15 && diffPercent < -5) {
       return {
-        text: 'Убыточный трейд',
+        text: t('calc.verdict.loss', lang),
         style: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-        diffText: `Вы теряете ${formattedDiff}`,
+        diffText: `${t('calc.verdict.loseMsg', lang)} ${formattedDiff}`,
       };
     } else if (diffPercent >= -5 && diffPercent <= 5) {
       return {
-        text: 'Честный трейд',
+        text: t('calc.verdict.fair', lang),
         style: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-        diffText: `Равный обмен (разница ${formattedDiff})`,
+        diffText: `${t('calc.verdict.fairMsg', lang)} ${formattedDiff})`,
       };
     } else if (diffPercent > 5 && diffPercent <= 15) {
       return {
-        text: 'Выгодный трейд',
+        text: t('calc.verdict.win', lang),
         style: 'bg-blue-500/15 text-blue-400 border-blue-500/30 shadow-lg shadow-blue-500/5',
-        diffText: `Прибыль ${formattedDiff}`,
+        diffText: `${t('calc.verdict.winMsg', lang)} ${formattedDiff}`,
       };
     } else {
       return {
-        text: 'Огромный плюс',
+        text: t('calc.verdict.hugeWin', lang),
         style: 'bg-purple-500/20 text-purple-300 border-purple-500/40 border-2 shadow-lg shadow-purple-500/5',
-        diffText: `Сверхприбыль ${formattedDiff}!`,
+        diffText: `${t('calc.verdict.hugeWinMsg', lang)} ${formattedDiff}!`,
       };
     }
   };
 
   const verdict = getVerdict();
 
+  const handleShare = async () => {
+    if (!calculatorRef.current) return;
+    try {
+      const canvas = await html2canvas(calculatorRef.current, {
+        backgroundColor: '#0b0f19',
+        scale: 2,
+        useCORS: true,
+      });
+      const image = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = image;
+      a.download = `bss-trade-${Date.now()}.png`;
+      a.click();
+    } catch (err) {
+      console.error('Failed to generate image', err);
+    }
+  };
+
   return (
-    <section className="w-full rounded-2xl glass-card border border-white/5 p-6 space-y-6">
+    <section ref={calculatorRef} className="w-full rounded-2xl glass-card border border-white/5 p-6 space-y-6">
       {/* Title Header */}
-      <div className="flex justify-between items-center border-b border-white/5 pb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-white/5 pb-4">
         <div className="flex items-center gap-2">
           <Scale className="h-5 w-5 text-amber-400" />
           <h2 className="text-lg font-bold text-neutral-100 uppercase tracking-wider font-sans">
-            Калькулятор обменов BSS
+            {t('calc.title', lang)}
           </h2>
         </div>
-        {(sideA.length > 0 || sideB.length > 0) && (
+        <div className="flex items-center gap-3 self-end sm:self-auto">
           <button
-            onClick={onClearTrade}
-            className="text-xs font-semibold text-red-400 hover:text-red-300 px-3 py-1.5 rounded-lg bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 transition-all cursor-pointer"
+            onClick={handleShare}
+            className="flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 px-3 py-1.5 rounded-lg bg-blue-500/5 hover:bg-blue-500/10 border border-blue-500/10 hover:border-blue-500/20 transition-all cursor-pointer"
           >
-            Очистить трейд
+            <Share2 className="h-3.5 w-3.5" />
+            {t('calc.share', lang)}
           </button>
-        )}
+          {(sideA.length > 0 || sideB.length > 0) && (
+            <button
+              onClick={onClearTrade}
+              className="text-xs font-semibold text-red-400 hover:text-red-300 px-3 py-1.5 rounded-lg bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 transition-all cursor-pointer"
+            >
+              {t('calc.clear', lang)}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Grid: Side A & Side B */}
@@ -116,9 +149,9 @@ export default function TradeCalculator({
         <div className="rounded-xl bg-neutral-900/40 border border-white/5 p-4 flex flex-col justify-between min-h-[220px]">
           <div>
             <h3 className="text-sm font-bold text-violet-400 border-b border-violet-500/10 pb-2 mb-3 flex justify-between items-center">
-              <span>Сторона А (Вы отдаете)</span>
+              <span>{t('calc.sideA', lang)}</span>
               <span className="text-[10px] uppercase bg-violet-500/10 text-violet-400 px-2 py-0.5 rounded-full border border-violet-500/20">
-                Отдача
+                {t('calc.sideA.badge', lang)}
               </span>
             </h3>
             
@@ -139,7 +172,7 @@ export default function TradeCalculator({
                           {item.rarity[0]}
                         </span>
                         <span className="text-xs font-semibold text-neutral-200 truncate max-w-[120px] sm:max-w-[160px]">
-                          {item.name}
+                          {lang === 'ru' ? item.name : item.englishName}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
@@ -157,7 +190,7 @@ export default function TradeCalculator({
                   ))
                 ) : (
                   <p className="text-xs text-neutral-500 text-center py-10 select-none">
-                    Выберите стикеры из списка ниже, чтобы добавить их сюда
+                    {t('calc.emptySide', lang)}
                   </p>
                 )}
               </AnimatePresence>
@@ -165,7 +198,7 @@ export default function TradeCalculator({
           </div>
 
           <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
-            <span className="text-neutral-400">Итоговая ценность:</span>
+            <span className="text-neutral-400">{t('calc.total', lang)}</span>
             <span className="text-base text-violet-400">{Number(totalA.toFixed(2))}★</span>
           </div>
         </div>
@@ -174,9 +207,9 @@ export default function TradeCalculator({
         <div className="rounded-xl bg-neutral-900/40 border border-white/5 p-4 flex flex-col justify-between min-h-[220px]">
           <div>
             <h3 className="text-sm font-bold text-emerald-400 border-b border-emerald-500/10 pb-2 mb-3 flex justify-between items-center">
-              <span>Сторона Б (Вам отдают)</span>
+              <span>{t('calc.sideB', lang)}</span>
               <span className="text-[10px] uppercase bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20">
-                Получение
+                {t('calc.sideB.badge', lang)}
               </span>
             </h3>
             
@@ -197,7 +230,7 @@ export default function TradeCalculator({
                           {item.rarity[0]}
                         </span>
                         <span className="text-xs font-semibold text-neutral-200 truncate max-w-[120px] sm:max-w-[160px]">
-                          {item.name}
+                          {lang === 'ru' ? item.name : item.englishName}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
@@ -215,7 +248,7 @@ export default function TradeCalculator({
                   ))
                 ) : (
                   <p className="text-xs text-neutral-500 text-center py-10 select-none">
-                    Выберите стикеры из списка ниже, чтобы добавить их сюда
+                    {t('calc.emptySide', lang)}
                   </p>
                 )}
               </AnimatePresence>
@@ -223,7 +256,7 @@ export default function TradeCalculator({
           </div>
 
           <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
-            <span className="text-neutral-400">Итоговая ценность:</span>
+            <span className="text-neutral-400">{t('calc.total', lang)}</span>
             <span className="text-base text-emerald-400">{Number(totalB.toFixed(2))}★</span>
           </div>
         </div>
@@ -232,18 +265,18 @@ export default function TradeCalculator({
       {/* Verdict Panel */}
       <div className={`p-4 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-300 ${verdict.style}`}>
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-neutral-950 flex items-center justify-center border border-white/5 shadow-inner">
+          <div className="h-10 w-10 rounded-lg bg-neutral-950 flex items-center justify-center border border-white/5 shadow-inner shrink-0">
             <ArrowLeftRight className="h-5 w-5 text-amber-400" />
           </div>
           <div className="text-center sm:text-left">
-            <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">Вердикт сделки</div>
+            <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('calc.verdict.title', lang)}</div>
             <h4 className="text-lg font-black tracking-tight uppercase leading-tight font-sans">
               {verdict.text}
             </h4>
           </div>
         </div>
         {verdict.diffText && (
-          <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-neutral-950/50 border border-white/5 text-neutral-300 font-mono text-center sm:text-right">
+          <span className="text-xs font-bold px-3 py-1.5 rounded-lg bg-neutral-950/50 border border-white/5 text-neutral-300 font-mono text-center sm:text-right shrink-0">
             {verdict.diffText}
           </span>
         )}
