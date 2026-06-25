@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Dark gamer theme overrides & utilities */
+@layer utilities {
+  .glass-card {
+    background-color: rgba(11, 15, 25, 0.65);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .glass-card-hover {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .glass-card-hover:hover {
+    transform: translateY(-4px) scale(1.008);
+    border-color: rgba(255, 255, 255, 0.09);
+    box-shadow: 
+      0 20px 40px -15px rgba(0, 0, 0, 0.7), 
+      0 0 50px -15px var(--hover-glow, rgba(139, 92, 246, 0.15));
+  }
+
+  /* Grid mesh ambient background */
+  .grid-bg {
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.02) 0%, transparent 40%),
+      radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.02) 0%, transparent 40%);
+    background-color: #0b0f19;
+  }
+
+  /* Subtle noise overlay */
+  .noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Base custom resets */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+  background-color: #0b0f19;
+  color: #f3f4f6;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #070a10;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Custom cursor selections */
+::selection {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: inherit;
+}
+
+/* Animations helper for mesh flows */
+@keyframes ambient-float {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(20px, -30px) scale(1.05);
+  }
+  66% {
+    transform: translate(-15px, 15px) scale(0.97);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.ambient-shape-1 {
+  animation: ambient-float 15s infinite alternate ease-in-out;
+}
+
+.ambient-shape-2 {
+  animation: ambient-float 22s infinite alternate-reverse ease-in-out;
+}
