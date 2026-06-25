@@ -2,9 +2,10 @@ import { Search, Scale } from 'lucide-react';
 
 interface NavbarProps {
   onSearchClick: () => void;
+  onAuthorsClick: () => void;
 }
 
-export default function Navbar({ onSearchClick }: NavbarProps) {
+export default function Navbar({ onSearchClick, onAuthorsClick }: NavbarProps) {
   const scrollToCalculator = () => {
     const calcElement = document.getElementById('trade-calculator-section');
     if (calcElement) {
@@ -47,6 +48,15 @@ export default function Navbar({ onSearchClick }: NavbarProps) {
             <kbd className="hidden sm:inline-flex items-center gap-0.5 bg-neutral-800 border border-white/5 px-1.5 py-0.5 rounded text-[9px] font-mono text-neutral-400">
               ⌘K
             </kbd>
+          </button>
+
+          {/* Authors button */}
+          <button
+            onClick={onAuthorsClick}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/5 bg-neutral-900/40 hover:bg-neutral-900/80 transition-all duration-300 text-neutral-400 hover:text-white text-xs select-none cursor-pointer font-bold"
+          >
+            <span>🪿</span>
+            <span className="hidden xs:inline">Авторы</span>
           </button>
 
           {/* Scroll to Calculator */}

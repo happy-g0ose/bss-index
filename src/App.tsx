@@ -6,6 +6,7 @@ import ItemCard from './components/ItemCard';
 import TradeCalculator from './components/TradeCalculator';
 import ItemDetailModal from './components/ItemDetailModal';
 import CommandMenu from './components/CommandMenu';
+import AuthorsModal from './components/AuthorsModal';
 import { bssItemsData } from './data/items';
 import type { BSSItem } from './data/items';
 
@@ -20,6 +21,7 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('Все');
   const [sortingOption, setSortingOption] = useState<SortType>('value-desc');
   const [isCommandMenuOpen, setIsCommandMenuOpen] = useState(false);
+  const [isAuthorsModalOpen, setIsAuthorsModalOpen] = useState(false);
 
   // Sync trade calculator data from localStorage (optional persistence for good UX)
   useEffect(() => {
@@ -122,7 +124,10 @@ export default function App() {
         <span>Нажмите <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">Ctrl + K</kbd> (или <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">⌘K</kbd>) для быстрого поиска ценников стикеров</span>
       </div>
 
-      <Navbar onSearchClick={() => setIsCommandMenuOpen(true)} />
+      <Navbar
+        onSearchClick={() => setIsCommandMenuOpen(true)}
+        onAuthorsClick={() => setIsAuthorsModalOpen(true)}
+      />
 
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-12">
         {/* Gaming Landing Banner (Hero) */}
@@ -264,9 +269,14 @@ export default function App() {
             <span className="font-extrabold tracking-widest text-neutral-400">BSS INDEX</span>
             <span>• Гайд ценников стикеров Roblox</span>
           </div>
-          <p className="flex items-center gap-1">
-            © {new Date().getFullYear()} BSS INDEX. Создано для трейдеров Bee Swarm Simulator.
-          </p>
+          <div className="flex flex-col sm:items-end gap-1">
+            <p className="flex items-center gap-1">
+              © {new Date().getFullYear()} BSS INDEX. Создано для трейдеров Bee Swarm Simulator.
+            </p>
+            <p className="text-amber-500/80 font-bold flex items-center gap-1">
+              Автор проекта: <span className="hover:text-amber-400 transition-colors cursor-pointer underline decoration-dotted" onClick={() => setIsAuthorsModalOpen(true)}>happy goose</span> 🪿
+            </p>
+          </div>
         </div>
       </footer>
 
@@ -285,6 +295,11 @@ export default function App() {
         onSelectItem={setSelectedItem}
       />
 
+      {/* Authors Information Modal */}
+      <AuthorsModal
+        isOpen={isAuthorsModalOpen}
+        onClose={() => setIsAuthorsModalOpen(false)}
+      />
     </div>
   );
 }
