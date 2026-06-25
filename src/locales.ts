@@ -66,7 +66,6 @@ export const locales: Dictionary = {
     'authors.tech': 'Технологии',
     'authors.support': 'Поддержка',
     'authors.thanks': 'Сделано с ❤️ для сообщества трейдеров Bee Swarm Simulator.',
-    'authors.thanks': 'Сделано с ❤️ для сообщества трейдеров Bee Swarm Simulator.',
   },
   en: {
     'nav.authors': 'Authors',
@@ -126,7 +125,6 @@ export const locales: Dictionary = {
     'authors.project': 'Project',
     'authors.tech': 'Technology',
     'authors.support': 'Support',
-    'authors.thanks': 'Made with ❤️ for the Bee Swarm Simulator trading community.',
     'authors.thanks': 'Made with ❤️ for the Bee Swarm Simulator trading community.',
   }
 };

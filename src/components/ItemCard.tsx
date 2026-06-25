@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus, Plus } from 'lucide-react';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
-import { t, translateDemand, translateStability } from '../locales';
+import { t, translateDemand } from '../locales';
 
 interface ItemCardProps {
   item: BSSItem;
