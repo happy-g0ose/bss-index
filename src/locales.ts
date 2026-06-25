@@ -12,7 +12,6 @@ export const locales: Dictionary = {
     'nav.search': 'Быстрый поиск (Ctrl+K)',
     'nav.tab.catalog': 'Прайс-лист',
     'nav.tab.calculator': 'Калькулятор',
-    'nav.tab.history': 'История цен',
     'hero.badge': 'Прайс-лист предметов Bee Swarm',
     'hero.title1': 'Ценность Стикеров &',
     'hero.title2': 'Ваучеров BSS',
@@ -67,16 +66,13 @@ export const locales: Dictionary = {
     'authors.tech': 'Технологии',
     'authors.support': 'Поддержка',
     'authors.thanks': 'Сделано с ❤️ для сообщества трейдеров Bee Swarm Simulator.',
-    'history.title': 'История изменений цен',
-    'history.desc': 'Последние обновления ценностей на рынке (на основе bssmvalues.com)',
-    'history.empty': 'Нет недавних изменений',
+    'authors.thanks': 'Сделано с ❤️ для сообщества трейдеров Bee Swarm Simulator.',
   },
   en: {
     'nav.authors': 'Authors',
     'nav.search': 'Quick Search (Ctrl+K)',
     'nav.tab.catalog': 'Value List',
     'nav.tab.calculator': 'Calculator',
-    'nav.tab.history': 'Price History',
     'hero.badge': 'Bee Swarm Items Value List',
     'hero.title1': 'Values of Stickers &',
     'hero.title2': 'BSS Vouchers',
@@ -131,9 +127,7 @@ export const locales: Dictionary = {
     'authors.tech': 'Technology',
     'authors.support': 'Support',
     'authors.thanks': 'Made with ❤️ for the Bee Swarm Simulator trading community.',
-    'history.title': 'Price History',
-    'history.desc': 'Recent value updates on the market (based on bssmvalues.com)',
-    'history.empty': 'No recent changes',
+    'authors.thanks': 'Made with ❤️ for the Bee Swarm Simulator trading community.',
   }
 };
 

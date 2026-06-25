@@ -7,7 +7,6 @@ import TradeCalculator from './components/TradeCalculator';
 import ItemDetailModal from './components/ItemDetailModal';
 import CommandMenu from './components/CommandMenu';
 import AuthorsModal from './components/AuthorsModal';
-import PriceHistory from './components/PriceHistory';
 import { bssItemsData } from './data/items';
 import type { BSSItem } from './data/items';
 import type { Language } from './locales';
@@ -15,7 +14,7 @@ import { t, translateCategory } from './locales';
 
 type CategoryType = string;
 type SortType = 'value-desc' | 'value-asc' | 'demand-desc' | 'name-asc';
-type TabType = 'catalog' | 'calculator' | 'history';
+type TabType = 'catalog' | 'calculator';
 
 export default function App() {
   const [sideA, setSideA] = useState<BSSItem[]>([]);
@@ -191,16 +190,6 @@ export default function App() {
               </span>
             )}
           </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
-              activeTab === 'history' 
-                ? 'bg-amber-500 text-neutral-950 shadow-md' 
-                : 'bg-neutral-900/40 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/60 border border-white/5'
-            }`}
-          >
-            {t('nav.tab.history', lang)}
-          </button>
         </div>
 
         {activeTab === 'calculator' && (
@@ -208,17 +197,13 @@ export default function App() {
             <TradeCalculator
               sideA={sideA}
               sideB={sideB}
+              onAddToSideA={handleAddToSideA}
+              onAddToSideB={handleAddToSideB}
               onRemoveFromSideA={handleRemoveFromSideA}
               onRemoveFromSideB={handleRemoveFromSideB}
               onClearTrade={handleClearTrade}
               lang={lang}
             />
-          </section>
-        )}
-
-        {activeTab === 'history' && (
-          <section className="animate-in fade-in duration-500">
-            <PriceHistory lang={lang} />
           </section>
         )}
 
