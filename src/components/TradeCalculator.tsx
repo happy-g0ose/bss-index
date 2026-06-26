@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Scale, X, ArrowLeftRight, Share2, Plus, Check } from 'lucide-react';
+import { Scale, X, ArrowLeftRight, Plus, Check, Link2, Camera } from 'lucide-react';
 import type { BSSItem } from '../data/items';
 import html2canvas from 'html2canvas';
 import type { Language } from '../locales';
@@ -30,7 +30,8 @@ export default function TradeCalculator({
 }: TradeCalculatorProps) {
   const calculatorRef = useRef<HTMLElement>(null);
   const [pickerTarget, setPickerTarget] = useState<'A' | 'B' | null>(null);
-  const [copied, setCopied] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedImage, setCopiedImage] = useState(false);
 
   const totalA = sideA.reduce((sum, item) => sum + item.value, 0);
   const totalB = sideB.reduce((sum, item) => sum + item.value, 0);
@@ -101,46 +102,57 @@ export default function TradeCalculator({
 
   const verdict = getVerdict();
 
-  const handleShare = async () => {
+  const handleCopyLink = async () => {
     if (sideA.length === 0 && sideB.length === 0) return;
 
     // Generate trade URL
     const tradeParams = `${sideA.map(item => item.id).join(',')}|${sideB.map(item => item.id).join(',')}`;
     const shareUrl = `${window.location.origin}${window.location.pathname}?trade=${encodeURIComponent(tradeParams)}`;
 
-    // Generate readable text summary
-    const formatItems = (list: BSSItem[]) =>
-      list.map(item => `${lang === 'ru' ? item.name : item.englishName} (${Number(item.value.toFixed(2))}★)`).join(', ');
-    const sideANames = formatItems(sideA);
-    const sideBNames = formatItems(sideB);
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy link', err);
+    }
+  };
 
-    const textSummary = `🔄 BSS INDEX Trade\n` +
-      `${lang === 'ru' ? 'Вы отдаете' : 'Giving'}: ${sideANames || '---'}\n` +
-      `${lang === 'ru' ? 'Вам отдают' : 'Receiving'}: ${sideBNames || '---'}\n` +
-      `${lang === 'ru' ? 'Вердикт' : 'Verdict'}: ${verdict.text} (${verdict.diffText || '0%'})\n` +
-      `Link: ${shareUrl}`;
+  const handleCopyImage = async () => {
+    if (!calculatorRef.current || (sideA.length === 0 && sideB.length === 0)) return;
 
     try {
-      // 1. Copy URL to clipboard
-      await navigator.clipboard.writeText(textSummary);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      const canvas = await html2canvas(calculatorRef.current, {
+        backgroundColor: '#0b0f19',
+        scale: 2,
+        useCORS: true,
+      });
 
-      // 2. Also download the trade card PNG image
-      if (calculatorRef.current) {
-        const canvas = await html2canvas(calculatorRef.current, {
-          backgroundColor: '#0b0f19',
-          scale: 2,
-          useCORS: true,
-        });
-        const image = canvas.toDataURL("image/png");
-        const a = document.createElement("a");
-        a.href = image;
-        a.download = `bss-trade-${Date.now()}.png`;
-        a.click();
-      }
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({
+                [blob.type]: blob
+              })
+            ]);
+            setCopiedImage(true);
+            setTimeout(() => setCopiedImage(false), 2000);
+          } catch (clipErr) {
+            console.error('Failed to copy image to clipboard, downloading instead', clipErr);
+            // Fallback: download the image
+            const image = canvas.toDataURL("image/png");
+            const a = document.createElement("a");
+            a.href = image;
+            a.download = `bss-trade-${Date.now()}.png`;
+            a.click();
+            setCopiedImage(true);
+            setTimeout(() => setCopiedImage(false), 2000);
+          }
+        }
+      }, 'image/png');
     } catch (err) {
-      console.error('Failed to share trade', err);
+      console.error('Failed to capture trade image', err);
     }
   };
 
@@ -162,16 +174,30 @@ export default function TradeCalculator({
             </h2>
           </div>
           <div className="flex items-center gap-3 self-end sm:self-auto">
+            {/* Copy Link Button */}
             <button
-              onClick={handleShare}
-              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all cursor-pointer ${
-                copied 
+              onClick={handleCopyLink}
+              className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer ${
+                copiedLink 
                   ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' 
-                  : 'bg-blue-500/5 text-blue-400 hover:text-blue-300 border-blue-500/10 hover:border-blue-500/20'
+                  : 'bg-neutral-900 border-white/5 hover:border-white/10 text-neutral-400 hover:text-neutral-200'
               }`}
             >
-              {copied ? <Check className="h-3.5 w-3.5" /> : <Share2 className="h-3.5 w-3.5" />}
-              {t(copied ? 'calc.copied' : 'calc.share', lang)}
+              {copiedLink ? <Check className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5 text-amber-500" />}
+              <span>{t(copiedLink ? 'calc.share.link.copied' : 'calc.share.link', lang)}</span>
+            </button>
+
+            {/* Copy Screenshot Button */}
+            <button
+              onClick={handleCopyImage}
+              className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer ${
+                copiedImage 
+                  ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' 
+                  : 'bg-neutral-900 border-white/5 hover:border-white/10 text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              {copiedImage ? <Check className="h-3.5 w-3.5" /> : <Camera className="h-3.5 w-3.5 text-blue-400" />}
+              <span>{t(copiedImage ? 'calc.share.image.copied' : 'calc.share.image', lang)}</span>
             </button>
             {(sideA.length > 0 || sideB.length > 0) && (
               <button
