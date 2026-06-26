@@ -7,16 +7,20 @@ interface NavbarProps {
   onAuthorsClick: () => void;
   lang: Language;
   setLang: (lang: Language) => void;
+  onLogoClick?: () => void;
 }
 
-export default function Navbar({ onSearchClick, onAuthorsClick, lang, setLang }: NavbarProps) {
+export default function Navbar({ onSearchClick, onAuthorsClick, lang, setLang, onLogoClick }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-[#0b0f19]/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 md:px-8 h-18 flex items-center justify-between">
         
         {/* Brand Logo & Title */}
         <div 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+          onClick={() => {
+            if (onLogoClick) onLogoClick();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }} 
           className="flex items-center gap-2.5 cursor-pointer select-none"
         >
           <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-amber-500/20">

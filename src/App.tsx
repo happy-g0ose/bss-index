@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Filter, SlidersHorizontal, Command, AlertCircle, Search } from 'lucide-react';
+import { Filter, SlidersHorizontal, Command, AlertCircle, Search } from 'lucide-react';
 import Navbar from './components/Navbar';
+import Home from './components/Home';
 import ItemCard from './components/ItemCard';
 import TradeCalculator from './components/TradeCalculator';
 import ItemDetailModal from './components/ItemDetailModal';
@@ -14,7 +15,7 @@ import { t, translateCategory } from './locales';
 
 type CategoryType = string;
 type SortType = 'value-desc' | 'value-asc' | 'demand-desc' | 'name-asc';
-type TabType = 'catalog' | 'calculator';
+type TabType = 'home' | 'catalog' | 'calculator';
 
 export default function App() {
   const [sideA, setSideA] = useState<BSSItem[]>([]);
@@ -27,7 +28,7 @@ export default function App() {
   const [isAuthorsModalOpen, setIsAuthorsModalOpen] = useState(false);
   
   const [lang, setLang] = useState<Language>('ru');
-  const [activeTab, setActiveTab] = useState<TabType>('catalog');
+  const [activeTab, setActiveTab] = useState<TabType>('home');
 
   // Sync trade calculator data from localStorage (optional persistence for good UX)
   useEffect(() => {
@@ -135,34 +136,22 @@ export default function App() {
         onAuthorsClick={() => setIsAuthorsModalOpen(true)}
         lang={lang}
         setLang={setLang}
+        onLogoClick={() => setActiveTab('home')}
       />
 
       <main className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-12">
-        {/* Gaming Landing Banner (Hero) */}
-        <section className="relative rounded-3xl p-8 md:p-12 overflow-hidden border border-white/5 bg-gradient-to-br from-neutral-900/85 to-[#0b0f19]/90 backdrop-blur-xl">
-          {/* Accent mesh sphere */}
-          <div className="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-amber-500/5 blur-3xl pointer-events-none ambient-shape-1" />
-          <div className="absolute -bottom-10 -left-10 w-80 h-80 rounded-full bg-blue-500/5 blur-3xl pointer-events-none ambient-shape-2" />
-
-          <div className="relative z-10 max-w-3xl space-y-6">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/20 bg-amber-500/5 text-[10px] font-extrabold tracking-widest uppercase text-amber-400">
-              <Sparkles className="h-3 w-3" />
-              {t('hero.badge', lang)}
-            </span>
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase leading-tight font-sans">
-              {t('hero.title1', lang)} <br />
-              <span className="bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent">
-                {t('hero.title2', lang)}
-              </span>
-            </h1>
-            <p className="text-neutral-400 text-sm md:text-base max-w-xl leading-relaxed font-medium">
-              {t('hero.desc', lang)}
-            </p>
-          </div>
-        </section>
-
         {/* Tabs Navigation */}
-        <div className="flex items-center justify-center gap-2 md:gap-4 border-b border-white/5 pb-6">
+        <div className="flex items-center justify-center gap-2 md:gap-4 border-b border-white/5 pb-6 select-none">
+          <button
+            onClick={() => setActiveTab('home')}
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
+              activeTab === 'home' 
+                ? 'bg-amber-500 text-neutral-950 shadow-md' 
+                : 'bg-neutral-900/40 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/60 border border-white/5'
+            }`}
+          >
+            {t('nav.tab.home', lang)}
+          </button>
           <button
             onClick={() => setActiveTab('catalog')}
             className={`px-4 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer ${
@@ -191,6 +180,14 @@ export default function App() {
             )}
           </button>
         </div>
+
+        {activeTab === 'home' && (
+          <Home
+            onNavigate={setActiveTab}
+            onSearchClick={() => setIsCommandMenuOpen(true)}
+            lang={lang}
+          />
+        )}
 
         {activeTab === 'calculator' && (
           <section id="trade-calculator-section" className="animate-in fade-in duration-500">
