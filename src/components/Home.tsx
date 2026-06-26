@@ -161,15 +161,17 @@ export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
                     <AnimatePresence mode="wait">
                       <motion.div 
                         key={sticker.name}
-                        initial={{ rotateY: 90, opacity: 0 }}
-                        animate={{ rotateY: 0, opacity: 1 }}
-                        exit={{ rotateY: -90, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
+                        initial={{ scale: 1.15, y: 25, opacity: 0, filter: 'blur(0px)' }}
+                        animate={{ scale: 1, y: 0, opacity: 1, filter: 'blur(0px)' }}
+                        exit={{ scale: 0.7, y: -35, opacity: 0, filter: 'blur(4px)' }}
+                        transition={{ 
+                          type: 'spring', 
+                          stiffness: 140, 
+                          damping: 16 
+                        }}
                         className={`p-3 bg-neutral-900/80 backdrop-blur-md rounded-2xl border ${sticker.borderColor} flex items-center gap-3 w-48 shadow-xl hover:border-amber-500/30 transition-colors`}
                         style={{ 
-                          boxShadow: `0 8px 30px ${sticker.glow}`,
-                          backfaceVisibility: 'hidden',
-                          transformStyle: 'preserve-3d'
+                          boxShadow: `0 8px 30px ${sticker.glow}`
                         }}
                         onClick={() => handleStickerClick(idx)}
                       >
