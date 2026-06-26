@@ -193,9 +193,16 @@ export default function TradeCalculator({
                       </span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs font-bold text-amber-400 font-mono whitespace-nowrap overflow-hidden px-1">
-                        {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))}★
-                      </span>
+                      <div className="flex flex-col items-end leading-none text-right px-1">
+                        <span className="text-xs font-black text-amber-400 font-mono">
+                          {Number(item.value.toFixed(2))}★
+                        </span>
+                        {item.valueLow !== item.valueHigh && (
+                          <span className="text-[9px] text-neutral-500 font-bold font-mono mt-0.5">
+                            {Number(item.valueLow.toFixed(2))}-{Number(item.valueHigh.toFixed(2))}
+                          </span>
+                        )}
+                      </div>
                       <button
                         onClick={() => onRemoveFromSideA(idx)}
                         className="p-1 rounded text-neutral-500 hover:text-red-400 hover:bg-red-500/10 cursor-pointer transition-colors"
@@ -258,9 +265,16 @@ export default function TradeCalculator({
                       </span>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-xs font-bold text-amber-400 font-mono whitespace-nowrap overflow-hidden px-1">
-                        {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))}★
-                      </span>
+                      <div className="flex flex-col items-end leading-none text-right px-1">
+                        <span className="text-xs font-black text-amber-400 font-mono">
+                          {Number(item.value.toFixed(2))}★
+                        </span>
+                        {item.valueLow !== item.valueHigh && (
+                          <span className="text-[9px] text-neutral-500 font-bold font-mono mt-0.5">
+                            {Number(item.valueLow.toFixed(2))}-{Number(item.valueHigh.toFixed(2))}
+                          </span>
+                        )}
+                      </div>
                       <button
                         onClick={() => onRemoveFromSideB(idx)}
                         className="p-1 rounded text-neutral-500 hover:text-red-400 hover:bg-red-500/10 cursor-pointer transition-colors"

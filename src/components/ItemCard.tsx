@@ -175,8 +175,15 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
         <div className="flex justify-between items-center text-xs select-none">
           <div className="text-left">
             <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.value', lang)}</div>
-            <div className="text-base font-black text-amber-400 font-mono flex items-center gap-0.5 whitespace-nowrap overflow-hidden">
-              {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))} <span className="text-[10px] font-normal text-amber-500">★</span>
+            <div className="flex flex-col items-start leading-none mt-1">
+              <span className="text-base font-black text-amber-400 font-mono flex items-center gap-0.5">
+                {Number(item.value.toFixed(2))} <span className="text-[10px] font-normal text-amber-500">★</span>
+              </span>
+              {item.valueLow !== item.valueHigh && (
+                <span className="text-[10px] text-neutral-500 font-bold font-mono">
+                  {Number(item.valueLow.toFixed(2))} - {Number(item.valueHigh.toFixed(2))}
+                </span>
+              )}
             </div>
           </div>
           <div className="text-center">

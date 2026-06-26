@@ -18,7 +18,7 @@ export interface BSSItem {
   image: string;
 }
 
-export const bssItemsData: BSSItem[] = [
+const rawBssItemsData: BSSItem[] = [
   {
     "id": "star-cub-0",
     "name": "Star Cub",
@@ -7534,3 +7534,47 @@ export const bssItemsData: BSSItem[] = [
     "image": "https://bssmvalues.com/images/virgo_star_sign.webp"
   }
 ];
+
+export const bssItemsData: BSSItem[] = rawBssItemsData.map(item => {
+  const value = item.value;
+  let rarity: BSSItem['rarity'] = "Обычный";
+  let glowColor = "rgba(16, 185, 129, 0.2)"; // Green
+  let borderColor = "border-emerald-500/20 group-hover:border-emerald-500/50";
+  let badgeColor = "bg-emerald-500/10 text-emerald-400 border-emerald-500/25";
+  let textColor = "text-emerald-400";
+
+  if (value >= 20.0) {
+    rarity = "Мифический";
+    glowColor = "rgba(244, 63, 94, 0.25)"; // Rose
+    borderColor = "border-rose-500/30 group-hover:border-rose-500/60";
+    badgeColor = "bg-rose-500/10 text-rose-400 border-rose-500/25";
+    textColor = "text-rose-400";
+  } else if (value >= 5.0) {
+    rarity = "Легендарный";
+    glowColor = "rgba(245, 158, 11, 0.25)"; // Amber
+    borderColor = "border-amber-500/30 group-hover:border-amber-500/60";
+    badgeColor = "bg-amber-500/10 text-amber-400 border-amber-500/25";
+    textColor = "text-amber-400";
+  } else if (value >= 1.0) {
+    rarity = "Эпический";
+    glowColor = "rgba(168, 85, 247, 0.25)"; // Purple
+    borderColor = "border-purple-500/30 group-hover:border-purple-500/60";
+    badgeColor = "bg-purple-500/10 text-purple-400 border-purple-500/25";
+    textColor = "text-purple-400";
+  } else if (value >= 0.2) {
+    rarity = "Редкий";
+    glowColor = "rgba(59, 130, 246, 0.25)"; // Blue
+    borderColor = "border-blue-500/30 group-hover:border-blue-500/60";
+    badgeColor = "bg-blue-500/10 text-blue-400 border-blue-500/25";
+    textColor = "text-blue-400";
+  }
+
+  return {
+    ...item,
+    rarity,
+    glowColor,
+    borderColor,
+    badgeColor,
+    textColor
+  };
+});

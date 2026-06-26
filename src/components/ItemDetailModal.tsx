@@ -145,8 +145,15 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
             <div className="grid grid-cols-3 gap-4 border-y border-white/5 py-4">
               <div className="text-center md:text-left overflow-hidden">
                 <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.baseValue', lang)}</div>
-                <div className="text-xl md:text-2xl font-black text-amber-400 font-mono mt-0.5 whitespace-nowrap">
-                  {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))} <span className="text-xs font-normal text-amber-500">★</span>
+                <div className="flex flex-col items-center md:items-start leading-none mt-1">
+                  <span className="text-xl md:text-2xl font-black text-amber-400 font-mono flex items-center gap-0.5">
+                    {Number(item.value.toFixed(2))} <span className="text-xs font-normal text-amber-500">★</span>
+                  </span>
+                  {item.valueLow !== item.valueHigh && (
+                    <span className="text-xs text-neutral-500 font-bold font-mono">
+                      {Number(item.valueLow.toFixed(2))} - {Number(item.valueHigh.toFixed(2))}
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="text-center md:text-left">
