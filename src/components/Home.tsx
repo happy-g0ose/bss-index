@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, TrendingUp, Calculator, Layers, Search, ArrowRight } from 'lucide-react';
 import type { Language } from '../locales';
-import { t } from '../locales';
+import { t, translateDemand } from '../locales';
+import { bssItemsData } from '../data/items';
 
 interface HomeProps {
   onNavigate: (tab: 'catalog' | 'calculator') => void;
@@ -54,6 +56,35 @@ const floatingStickers = [
 ];
 
 export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
+  const [stickers, setStickers] = useState(() =>
+    floatingStickers.map((st, index) => ({
+      ...st,
+      keyId: `sticker-${index}`
+    }))
+  );
+
+  const handleStickerClick = (index: number) => {
+    if (bssItemsData.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * bssItemsData.length);
+    const randomItem = bssItemsData[randomIndex];
+
+    setStickers(prev => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        name: randomItem.name,
+        value: Number(randomItem.value.toFixed(2)).toString(),
+        demand: randomItem.demand,
+        demandEn: translateDemand(randomItem.demand, 'en'),
+        image: randomItem.image,
+        glow: randomItem.glowColor,
+        borderColor: randomItem.borderColor,
+        badge: randomItem.badgeColor,
+      };
+      return updated;
+    });
+  };
+
   return (
     <div className="space-y-16 animate-in fade-in duration-500">
       {/* Hero Section */}
@@ -102,7 +133,7 @@ export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
           {/* Animated Float Stickers Side */}
           <div className="lg:col-span-5 hidden lg:block relative min-h-[350px]">
             <div className="absolute inset-0 flex items-center justify-center">
-              {floatingStickers.map((sticker, idx) => {
+              {stickers.map((sticker, idx) => {
                 // Configure drift animations for floating feel
                 const xOffset = idx % 2 === 0 ? -30 : 30;
                 const yOffset = idx < 2 ? -60 : 60;
@@ -110,8 +141,8 @@ export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
 
                 return (
                   <motion.div
-                    key={sticker.name}
-                    className="absolute cursor-pointer"
+                    key={sticker.keyId}
+                    className="absolute cursor-pointer select-none"
                     style={{
                       transform: `translate(${xOffset * 3}px, ${yOffset * 1.5}px)`,
                     }}
@@ -127,9 +158,9 @@ export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
                     whileHover={{ scale: 1.08, zIndex: 30 }}
                   >
                     <div 
-                      className={`p-3 bg-neutral-900/80 backdrop-blur-md rounded-2xl border ${sticker.borderColor} flex items-center gap-3 w-48 shadow-xl`}
+                      className={`p-3 bg-neutral-900/80 backdrop-blur-md rounded-2xl border ${sticker.borderColor} flex items-center gap-3 w-48 shadow-xl hover:border-amber-500/30 transition-colors`}
                       style={{ boxShadow: `0 8px 30px ${sticker.glow}` }}
-                      onClick={() => onNavigate('catalog')}
+                      onClick={() => handleStickerClick(idx)}
                     >
                       <img 
                         src={sticker.image} 
