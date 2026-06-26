@@ -174,9 +174,11 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
           <h3 className="text-base font-bold text-neutral-100 group-hover:text-white transition-colors truncate">
             {lang === 'ru' ? item.name : item.englishName}
           </h3>
-          <span className="text-xs text-neutral-400 font-mono block">
-            {lang === 'ru' ? item.englishName : item.name}
-          </span>
+          {lang === 'ru' && item.name !== item.englishName && (
+            <span className="text-xs text-neutral-400 font-mono block">
+              {item.englishName}
+            </span>
+          )}
         </div>
       </div>
 

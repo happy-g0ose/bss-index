@@ -338,14 +338,14 @@ export default function App() {
               </svg>
             </div>
             <span className="font-extrabold tracking-widest text-neutral-400">BSS INDEX</span>
-            <span>• Гайд ценников стикеров Roblox</span>
+            <span>• {lang === 'ru' ? 'Гайд ценников стикеров Roblox' : 'Roblox Sticker Value Guide'}</span>
           </div>
           <div className="flex flex-col sm:items-end gap-1">
             <p className="flex items-center gap-1">
-              © {new Date().getFullYear()} BSS INDEX. Создано для трейдеров Bee Swarm Simulator.
+              © {new Date().getFullYear()} BSS INDEX. {lang === 'ru' ? 'Создано для трейдеров Bee Swarm Simulator.' : 'Created for Bee Swarm Simulator traders.'}
             </p>
             <p className="text-amber-500/80 font-bold flex items-center gap-1">
-              Автор проекта: <span className="hover:text-amber-400 transition-colors cursor-pointer underline decoration-dotted" onClick={() => setIsAuthorsModalOpen(true)}>happy goose</span> 🪿
+              {lang === 'ru' ? 'Автор проекта:' : 'Project Author:'} <span className="hover:text-amber-400 transition-colors cursor-pointer underline decoration-dotted" onClick={() => setIsAuthorsModalOpen(true)}>happy goose</span> 🪿
             </p>
           </div>
         </div>
