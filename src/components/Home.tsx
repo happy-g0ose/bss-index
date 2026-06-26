@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, TrendingUp, Calculator, Layers, Search, ArrowRight } from 'lucide-react';
 import type { Language } from '../locales';
 import { t, translateDemand } from '../locales';
@@ -145,6 +145,7 @@ export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
                     className="absolute cursor-pointer select-none"
                     style={{
                       transform: `translate(${xOffset * 3}px, ${yOffset * 1.5}px)`,
+                      perspective: 1000,
                     }}
                     animate={{
                       y: [yOffset * 1.5 - 6, yOffset * 1.5 + 6, yOffset * 1.5 - 6],
@@ -157,24 +158,35 @@ export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
                     }}
                     whileHover={{ scale: 1.08, zIndex: 30 }}
                   >
-                    <div 
-                      className={`p-3 bg-neutral-900/80 backdrop-blur-md rounded-2xl border ${sticker.borderColor} flex items-center gap-3 w-48 shadow-xl hover:border-amber-500/30 transition-colors`}
-                      style={{ boxShadow: `0 8px 30px ${sticker.glow}` }}
-                      onClick={() => handleStickerClick(idx)}
-                    >
-                      <img 
-                        src={sticker.image} 
-                        alt={sticker.name} 
-                        className="w-11 h-11 object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)]" 
-                      />
-                      <div className="text-left leading-tight">
-                        <div className="text-[10px] font-bold text-neutral-400 truncate w-32">{sticker.name}</div>
-                        <div className="text-xs font-black text-white mt-0.5">{sticker.value} <span className="text-[9px] text-amber-500 font-bold">Val</span></div>
-                        <span className={`inline-block text-[8px] font-bold px-1.5 py-0.5 rounded border mt-1 ${sticker.badge}`}>
-                          {lang === 'ru' ? sticker.demand : sticker.demandEn}
-                        </span>
-                      </div>
-                    </div>
+                    <AnimatePresence mode="wait">
+                      <motion.div 
+                        key={sticker.name}
+                        initial={{ rotateY: 90, opacity: 0 }}
+                        animate={{ rotateY: 0, opacity: 1 }}
+                        exit={{ rotateY: -90, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className={`p-3 bg-neutral-900/80 backdrop-blur-md rounded-2xl border ${sticker.borderColor} flex items-center gap-3 w-48 shadow-xl hover:border-amber-500/30 transition-colors`}
+                        style={{ 
+                          boxShadow: `0 8px 30px ${sticker.glow}`,
+                          backfaceVisibility: 'hidden',
+                          transformStyle: 'preserve-3d'
+                        }}
+                        onClick={() => handleStickerClick(idx)}
+                      >
+                        <img 
+                          src={sticker.image} 
+                          alt={sticker.name} 
+                          className="w-11 h-11 object-contain drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)]" 
+                        />
+                        <div className="text-left leading-tight">
+                          <div className="text-[10px] font-bold text-neutral-400 truncate w-32">{sticker.name}</div>
+                          <div className="text-xs font-black text-white mt-0.5">{sticker.value} <span className="text-[9px] text-amber-500 font-bold">Val</span></div>
+                          <span className={`inline-block text-[8px] font-bold px-1.5 py-0.5 rounded border mt-1 ${sticker.badge}`}>
+                            {lang === 'ru' ? sticker.demand : sticker.demandEn}
+                          </span>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
                   </motion.div>
                 );
               })}

@@ -97,7 +97,7 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
         </svg>
       );
     }
-    if (item.category === 'Скины на куба') {
+    if (item.category === 'Скины на каба') {
       return (
         <svg className={`h-12 w-12 ${iconColor} opacity-80`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />

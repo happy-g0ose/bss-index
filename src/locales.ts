@@ -200,7 +200,7 @@ export function translateCategory(cat: string, lang: Language): string {
     case 'Драгоценности': return 'Gems';
     case 'Листья': return 'Leaves';
     case 'Ваучеры': return 'Vouchers';
-    case 'Скины на куба': return 'Cub Skins';
+    case 'Скины на каба': return 'Cub Skins';
     case 'Звездные знаки': return 'Star Signs';
     case 'Цветы': return 'Flowers';
     case 'Инструменты': return 'Tools';

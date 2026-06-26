@@ -2,7 +2,7 @@ export interface BSSItem {
   id: string;
   name: string;
   englishName: string;
-  category: "Скины на куба" | "Скины на улей" | "Ваучеры" | "Стикеры пчел" | "Стикеры медведей" | "Стикеры мобов" | "Искусство" | "Драгоценности" | "Иконки нектара" | "Цветы" | "Грибы" | "Листья" | "Инструменты" | "Марки" | "Стикеры Пчелождества" | "Разное" | "Звездные знаки";
+  category: "Скины на каба" | "Скины на куба" | "Скины на улей" | "Ваучеры" | "Стикеры пчел" | "Стикеры медведей" | "Стикеры мобов" | "Искусство" | "Драгоценности" | "Иконки нектара" | "Цветы" | "Грибы" | "Листья" | "Инструменты" | "Марки" | "Стикеры Пчелождества" | "Разное" | "Звездные знаки";
   value: number;
   valueLow: number;
   valueHigh: number;
@@ -7540,6 +7540,7 @@ export const bssItemsData: BSSItem[] = rawBssItemsData.map(item => {
   const value = isSign ? 1.0 : item.value;
   const valueLow = isSign ? 1.0 : item.valueLow;
   const valueHigh = isSign ? 1.0 : item.valueHigh;
+  const category = item.category === "Скины на куба" ? "Скины на каба" : item.category;
 
   let rarity: BSSItem['rarity'] = "Обычный";
   let glowColor = "rgba(16, 185, 129, 0.2)"; // Green
@@ -7575,6 +7576,7 @@ export const bssItemsData: BSSItem[] = rawBssItemsData.map(item => {
 
   return {
     ...item,
+    category,
     value,
     valueLow,
     valueHigh,
