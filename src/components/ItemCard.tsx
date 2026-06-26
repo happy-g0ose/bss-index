@@ -15,7 +15,7 @@ interface ItemCardProps {
   lang: Language;
 }
 
-export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, index, lang }: ItemCardProps) {
+export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, index: _index, lang }: ItemCardProps) {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -66,15 +66,23 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
 
   // Card staggered animation entrance
   const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, scale: 0.96, y: 15 },
     visible: {
       opacity: 1,
+      scale: 1,
       y: 0,
       transition: {
         type: 'spring' as const,
-        stiffness: 110,
-        damping: 15,
-        delay: index * 0.04,
+        stiffness: 150,
+        damping: 20,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.96,
+      y: 10,
+      transition: {
+        duration: 0.15,
       },
     },
   };
@@ -117,9 +125,12 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
 
   return (
     <motion.div
+      layout
       variants={cardVariants}
       initial="hidden"
       animate="visible"
+      exit="exit"
+      whileHover={{ y: -4, scale: 1.008 }}
       whileTap={{ scale: 0.99 }}
       onMouseMove={handleMouseMove}
       onClick={onClick}
