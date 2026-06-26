@@ -33,12 +33,41 @@ export default function App() {
   // Sync trade calculator data from localStorage (optional persistence for good UX)
   useEffect(() => {
     try {
+      // Check if URL has shared trade parameters
+      const params = new URLSearchParams(window.location.search);
+      const sharedTrade = params.get('trade');
+      if (sharedTrade) {
+        const [partA, partB] = sharedTrade.split('|');
+        const idsA = partA ? partA.split(',') : [];
+        const idsB = partB ? partB.split(',') : [];
+
+        // Find items in bssItemsData
+        const newSideA = idsA
+          .map(id => bssItemsData.find(item => item.id === id))
+          .filter(Boolean) as BSSItem[];
+        const newSideB = idsB
+          .map(id => bssItemsData.find(item => item.id === id))
+          .filter(Boolean) as BSSItem[];
+
+        if (newSideA.length > 0 || newSideB.length > 0) {
+          setSideA(newSideA);
+          setSideB(newSideB);
+          saveTradeToLocal(newSideA, newSideB);
+          setActiveTab('calculator'); // automatically open calculator tab to show the trade!
+          
+          // Clean up search parameters so refreshing doesn't overwrite modifications
+          const newUrl = window.location.origin + window.location.pathname;
+          window.history.replaceState({}, document.title, newUrl);
+          return;
+        }
+      }
+
       const savedA = localStorage.getItem('bss-trade-sideA');
       const savedB = localStorage.getItem('bss-trade-sideB');
       if (savedA) setSideA(JSON.parse(savedA));
       if (savedB) setSideB(JSON.parse(savedB));
     } catch (e) {
-      console.error('Failed to load trades from localStorage', e);
+      console.error('Failed to load trades', e);
     }
   }, []);
 
