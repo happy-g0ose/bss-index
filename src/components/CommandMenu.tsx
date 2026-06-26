@@ -14,6 +14,7 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: Command
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Toggle open on CMD+K / CTRL+K
   useEffect(() => {
@@ -35,6 +36,17 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: Command
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [isOpen]);
+
+  // Scroll active item into view when selectedIndex changes
+  useEffect(() => {
+    if (!scrollContainerRef.current) return;
+    const activeItem = scrollContainerRef.current.querySelector(`[data-index="${selectedIndex}"]`) as HTMLElement;
+    if (activeItem) {
+      activeItem.scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [selectedIndex]);
 
   // Filter items
   const filteredItems = bssItemsData.filter(item => {
@@ -101,7 +113,7 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: Command
             </button>
           </div>
 
-          <div className="max-h-[300px] overflow-y-auto p-2">
+          <div ref={scrollContainerRef} className="max-h-[300px] overflow-y-auto p-2">
             {filteredItems.length > 0 ? (
               <div className="space-y-1">
                 <div className="px-3 py-1.5 text-[10px] font-bold text-neutral-500 tracking-wider uppercase select-none">
@@ -112,6 +124,7 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: Command
                   return (
                     <div
                       key={item.id}
+                      data-index={idx}
                       onClick={() => {
                         onSelectItem(item);
                         setIsOpen(false);
@@ -144,7 +157,7 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: Command
                       </div>
                       <div className="flex items-center gap-2.5 shrink-0">
                         <span className="text-xs font-black text-amber-400 font-mono">
-                          {item.value}★
+                          {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))}★
                         </span>
                         <span className={`text-[8px] font-bold px-2 py-0.5 rounded border leading-none ${item.badgeColor}`}>
                           {item.rarity}
