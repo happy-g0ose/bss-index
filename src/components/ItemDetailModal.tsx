@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Info, Clock, Compass } from 'lucide-react';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
-import { t, translateDemand, translateStability, translateCategory } from '../locales';
+import { t, translateDemand, translateStability, translateCategory, translateRarity } from '../locales';
 
 interface ItemDetailModalProps {
   item: BSSItem | null;
@@ -104,7 +104,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
           <div className="flex items-center justify-between p-6 border-b border-white/5 bg-neutral-950/40 backdrop-blur-md z-20">
             <div className="flex items-center gap-2">
               <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded border ${item.badgeColor}`}>
-                {item.rarity}
+                {translateRarity(item.rarity, lang)}
               </span>
               <span className="text-xs text-neutral-400 font-semibold">• &nbsp; {translateCategory(item.category, lang)}</span>
             </div>

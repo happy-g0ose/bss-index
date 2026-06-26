@@ -194,16 +194,37 @@ export function translateCategory(cat: string, lang: Language): string {
   if (lang === 'ru') return cat;
   switch (cat) {
     case 'Все': return 'All';
-    case 'Стикеры мобов': return 'Mob Stickers';
-    case 'Стикеры пчел': return 'Bee Stickers';
-    case 'Стикеры полей': return 'Field Stickers';
-    case 'Драгоценности': return 'Gems';
-    case 'Листья': return 'Leaves';
+    case 'Скины на каба':
+    case 'Скины на куба': return 'Cub Skins';
+    case 'Скины на улей': return 'Hive Skins';
     case 'Ваучеры': return 'Vouchers';
-    case 'Скины на каба': return 'Cub Skins';
-    case 'Звездные знаки': return 'Star Signs';
+    case 'Стикеры пчел': return 'Bee Stickers';
+    case 'Стикеры медведей': return 'Bear Stickers';
+    case 'Стикеры мобов': return 'Mob Stickers';
+    case 'Искусство': return 'Art';
+    case 'Драгоценности': return 'Gems';
+    case 'Иконки нектара': return 'Nectar Icons';
     case 'Цветы': return 'Flowers';
+    case 'Грибы': return 'Mushrooms';
+    case 'Листья': return 'Leaves';
     case 'Инструменты': return 'Tools';
+    case 'Марки': return 'Stamps';
+    case 'Стикеры Пчелождества': return 'Beesmas Stickers';
+    case 'Разное': return 'Misc';
+    case 'Звездные знаки': return 'Star Signs';
+    case 'Стикеры полей': return 'Field Stickers';
     default: return cat;
+  }
+}
+
+export function translateRarity(rarity: string, lang: Language): string {
+  if (lang === 'ru') return rarity;
+  switch (rarity) {
+    case 'Обычный': return 'Common';
+    case 'Редкий': return 'Rare';
+    case 'Эпический': return 'Epic';
+    case 'Легендарный': return 'Legendary';
+    case 'Мифический': return 'Mythic';
+    default: return rarity;
   }
 }

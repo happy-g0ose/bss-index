@@ -365,6 +365,7 @@ export default function App() {
         isOpen={isCommandMenuOpen}
         setIsOpen={setIsCommandMenuOpen}
         onSelectItem={setSelectedItem}
+        lang={lang}
       />
 
       {/* Authors Information Modal */}

@@ -3,14 +3,17 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Search, Command, ChevronRight, FileText, X } from 'lucide-react';
 import { bssItemsData } from '../data/items';
 import type { BSSItem } from '../data/items';
+import type { Language } from '../locales';
+import { translateRarity } from '../locales';
 
 interface CommandMenuProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   onSelectItem: (item: BSSItem) => void;
+  lang: Language;
 }
 
-export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: CommandMenuProps) {
+export default function CommandMenu({ isOpen, setIsOpen, onSelectItem, lang }: CommandMenuProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -160,7 +163,7 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: Command
                           {item.valueLow !== item.valueHigh ? `${Number(item.valueLow.toFixed(2))} - ${Number(item.valueHigh.toFixed(2))}` : Number(item.value.toFixed(2))}★
                         </span>
                         <span className={`text-[8px] font-bold px-2 py-0.5 rounded border leading-none ${item.badgeColor}`}>
-                          {item.rarity}
+                          {translateRarity(item.rarity, lang)}
                         </span>
                         <ChevronRight className="h-4 w-4 opacity-45" />
                       </div>
@@ -171,7 +174,7 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem }: Command
             ) : (
               <div className="py-12 text-center text-neutral-500">
                 <Command className="h-8 w-8 mx-auto mb-3 opacity-25 animate-pulse text-amber-500" />
-                <p className="text-xs">Предметы не найдены.</p>
+                <p className="text-xs">{lang === 'ru' ? 'Предметы не найдены.' : 'No items found.'}</p>
               </div>
             )}
           </div>
