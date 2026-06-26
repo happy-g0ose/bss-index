@@ -34,10 +34,7 @@ export default function TradeCalculator({
   const totalA = sideA.reduce((sum, item) => sum + item.value, 0);
   const totalB = sideB.reduce((sum, item) => sum + item.value, 0);
 
-  const totalALow = sideA.reduce((sum, item) => sum + item.valueLow, 0);
-  const totalAHigh = sideA.reduce((sum, item) => sum + item.valueHigh, 0);
-  const totalBLow = sideB.reduce((sum, item) => sum + item.valueLow, 0);
-  const totalBHigh = sideB.reduce((sum, item) => sum + item.valueHigh, 0);
+
 
   // Calculate percentage difference relative to Side A
   const getVerdict = () => {
@@ -184,11 +181,16 @@ export default function TradeCalculator({
                     exit={{ opacity: 0, x: -10 }}
                     className="flex items-center justify-between p-2 rounded-lg bg-[#0e1220]/60 border border-white/5 hover:border-violet-500/20 transition-colors"
                   >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border leading-none ${item.badgeColor}`}>
-                        {item.rarity[0]}
-                      </span>
-                      <span className="text-xs font-semibold text-neutral-200 truncate max-w-[120px] sm:max-w-[160px]">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="h-6 w-6 rounded bg-neutral-950/80 border border-white/5 flex items-center justify-center overflow-hidden shrink-0 select-none">
+                        <img
+                          src={item.image}
+                          alt=""
+                          className="h-5.5 w-5.5 object-contain"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      </div>
+                      <span className="text-xs font-semibold text-neutral-200 truncate max-w-[125px] sm:max-w-[165px]">
                         {lang === 'ru' ? item.name : item.englishName}
                       </span>
                     </div>
@@ -197,11 +199,6 @@ export default function TradeCalculator({
                         <span className="text-xs font-black text-amber-400 font-mono">
                           {Number(item.value.toFixed(2))}★
                         </span>
-                        {item.valueLow !== item.valueHigh && (
-                          <span className="text-[9px] text-neutral-500 font-bold font-mono mt-0.5">
-                            {Number(item.valueLow.toFixed(2))}-{Number(item.valueHigh.toFixed(2))}
-                          </span>
-                        )}
                       </div>
                       <button
                         onClick={() => onRemoveFromSideA(idx)}
@@ -231,7 +228,7 @@ export default function TradeCalculator({
             <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
               <span className="text-neutral-400">{t('calc.total', lang)}</span>
               <span className="text-base text-violet-400 whitespace-nowrap">
-                {totalALow !== totalAHigh ? `${Number(totalALow.toFixed(2))} - ${Number(totalAHigh.toFixed(2))}` : Number(totalA.toFixed(2))}★
+                {Number(totalA.toFixed(2))}★
               </span>
             </div>
           </div>
@@ -256,11 +253,16 @@ export default function TradeCalculator({
                     exit={{ opacity: 0, x: 10 }}
                     className="flex items-center justify-between p-2 rounded-lg bg-[#0e1220]/60 border border-white/5 hover:border-emerald-500/20 transition-colors"
                   >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border leading-none ${item.badgeColor}`}>
-                        {item.rarity[0]}
-                      </span>
-                      <span className="text-xs font-semibold text-neutral-200 truncate max-w-[120px] sm:max-w-[160px]">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="h-6 w-6 rounded bg-neutral-950/80 border border-white/5 flex items-center justify-center overflow-hidden shrink-0 select-none">
+                        <img
+                          src={item.image}
+                          alt=""
+                          className="h-5.5 w-5.5 object-contain"
+                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        />
+                      </div>
+                      <span className="text-xs font-semibold text-neutral-200 truncate max-w-[125px] sm:max-w-[165px]">
                         {lang === 'ru' ? item.name : item.englishName}
                       </span>
                     </div>
@@ -269,11 +271,6 @@ export default function TradeCalculator({
                         <span className="text-xs font-black text-amber-400 font-mono">
                           {Number(item.value.toFixed(2))}★
                         </span>
-                        {item.valueLow !== item.valueHigh && (
-                          <span className="text-[9px] text-neutral-500 font-bold font-mono mt-0.5">
-                            {Number(item.valueLow.toFixed(2))}-{Number(item.valueHigh.toFixed(2))}
-                          </span>
-                        )}
                       </div>
                       <button
                         onClick={() => onRemoveFromSideB(idx)}
@@ -303,7 +300,7 @@ export default function TradeCalculator({
             <div className="mt-4 pt-3 border-t border-white/5 flex justify-between items-center text-xs font-bold font-mono">
               <span className="text-neutral-400">{t('calc.total', lang)}</span>
               <span className="text-base text-emerald-400 whitespace-nowrap">
-                {totalBLow !== totalBHigh ? `${Number(totalBLow.toFixed(2))} - ${Number(totalBHigh.toFixed(2))}` : Number(totalB.toFixed(2))}★
+                {Number(totalB.toFixed(2))}★
               </span>
             </div>
           </div>

@@ -7536,7 +7536,11 @@ const rawBssItemsData: BSSItem[] = [
 ];
 
 export const bssItemsData: BSSItem[] = rawBssItemsData.map(item => {
-  const value = item.value;
+  const isSign = item.category === "Звездные знаки";
+  const value = isSign ? 1.0 : item.value;
+  const valueLow = isSign ? 1.0 : item.valueLow;
+  const valueHigh = isSign ? 1.0 : item.valueHigh;
+
   let rarity: BSSItem['rarity'] = "Обычный";
   let glowColor = "rgba(16, 185, 129, 0.2)"; // Green
   let borderColor = "border-emerald-500/20 group-hover:border-emerald-500/50";
@@ -7571,6 +7575,9 @@ export const bssItemsData: BSSItem[] = rawBssItemsData.map(item => {
 
   return {
     ...item,
+    value,
+    valueLow,
+    valueHigh,
     rarity,
     glowColor,
     borderColor,
