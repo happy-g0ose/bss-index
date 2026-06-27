@@ -111,7 +111,7 @@ export default function App() {
   // Categories list dynamically compiled from dataset
   const categories: CategoryType[] = [
     'Все',
-    ...Array.from(new Set(bssItemsData.map(item => item.category)))
+    ...Array.from(new Set(bssItemsData.map(item => item.category).filter(c => c !== 'Биквипы')))
   ];
 
   // Demand ranking helper for sorting
@@ -125,6 +125,9 @@ export default function App() {
   // Filter & Sort Items
   const processedItems = bssItemsData
     .filter(item => {
+      // Exclude Beequips from the main catalog since they have their own tab
+      if (item.category === 'Биквипы') return false;
+
       // Category filter
       if (selectedCategory !== 'Все' && item.category !== selectedCategory) {
         return false;
