@@ -246,7 +246,7 @@ export default function TradeCalculator({
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                       </div>
-                      <span className="text-xs font-semibold text-neutral-200 truncate max-w-[125px] sm:max-w-[165px]">
+                      <span className="text-xs font-semibold text-neutral-200 leading-tight break-words">
                         {lang === 'ru' ? item.name : item.englishName}
                       </span>
                     </div>
@@ -318,7 +318,7 @@ export default function TradeCalculator({
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
                       </div>
-                      <span className="text-xs font-semibold text-neutral-200 truncate max-w-[125px] sm:max-w-[165px]">
+                      <span className="text-xs font-semibold text-neutral-200 leading-tight break-words">
                         {lang === 'ru' ? item.name : item.englishName}
                       </span>
                     </div>
