@@ -155,18 +155,13 @@ export default function App() {
     <div className="min-h-screen bg-[#0b0f19] text-neutral-100 font-sans relative antialiased grid-bg noise-overlay">
       
       {/* Keyboard Shortcut Announcement Banner */}
-      <div className="bg-gradient-to-r from-amber-500/80 to-yellow-600/80 text-neutral-950 text-[9px] sm:text-[10px] font-extrabold py-1.5 px-4 text-center tracking-wider uppercase select-none flex items-center justify-center gap-2 shadow-md border-b border-amber-500/10 flex-wrap">
+      <div className="bg-gradient-to-r from-amber-500/80 to-yellow-600/80 text-neutral-950 text-[10px] font-extrabold py-1.5 px-4 text-center tracking-wider uppercase select-none flex items-center justify-center gap-2 shadow-md border-b border-amber-500/10 flex-wrap">
         <span className="bg-neutral-950 text-amber-500 px-1.5 py-0.5 rounded text-[8px] font-black border border-amber-500/20 tracking-normal inline-block">
           {lang === 'ru' ? 'БЕТА ТЕСТ' : 'BETA TEST'}
         </span>
         <span className="opacity-95">
-          {lang === 'ru' 
-            ? 'О проекте знают максимум 5 человек • Нажмите' 
-            : 'Only max 5 people know about this project • Press'}{' '}
-          <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">Ctrl + K</kbd>{' '}
-          {lang === 'ru' ? 'или' : 'or'}{' '}
-          <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">Ctrl + L</kbd>{' '}
-          {lang === 'ru' ? 'для быстрого поиска ценников' : 'for quick search'}
+          {lang === 'ru' ? 'Открыть поиск:' : 'Open search:'}{' '}
+          <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">Ctrl + K</kbd>
         </span>
       </div>
 
