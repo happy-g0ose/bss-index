@@ -88,6 +88,11 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
   };
 
   const getWeeksAgoText = (index: number, lang: Language) => {
+    if (item.historicalDates && item.historicalDates[index]) {
+      const d = item.historicalDates[index];
+      const parts = d.split('-');
+      return parts.length === 3 ? `${parts[2]}.${parts[1]}.${parts[0]}` : d;
+    }
     if (lang === 'ru') {
       switch (index) {
         case 0: return '6 недель назад';
@@ -388,10 +393,38 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
 
                 {/* X-Axis labels */}
                 <div className="flex justify-between items-center text-[9px] text-neutral-500 font-mono font-bold mt-2 pt-2 border-t border-white/5">
-                  <span>{lang === 'ru' ? '6 нед. назад' : '6 weeks ago'}</span>
-                  <span>{lang === 'ru' ? '4 нед. назад' : '4 weeks ago'}</span>
-                  <span>{lang === 'ru' ? '2 нед. назад' : '2 weeks ago'}</span>
-                  <span>{lang === 'ru' ? 'Текущая неделя' : 'Current week'}</span>
+                  {(() => {
+                    const dates = item.historicalDates || [];
+                    if (dates.length === 0) {
+                      return (
+                        <>
+                          <span>{lang === 'ru' ? '6 нед. назад' : '6 weeks ago'}</span>
+                          <span>{lang === 'ru' ? '4 нед. назад' : '4 weeks ago'}</span>
+                          <span>{lang === 'ru' ? '2 нед. назад' : '2 weeks ago'}</span>
+                          <span>{lang === 'ru' ? 'Текущая неделя' : 'Current week'}</span>
+                        </>
+                      );
+                    }
+                    const formatDateStr = (d: string) => {
+                      const parts = d.split('-');
+                      return parts.length === 3 ? `${parts[2]}.${parts[1]}.${parts[0]}` : d;
+                    };
+                    const len = dates.length;
+                    if (len < 4) {
+                      return dates.map((d, k) => (
+                        <span key={k}>{formatDateStr(d)}</span>
+                      ));
+                    }
+                    const idxs = [
+                      0,
+                      Math.floor((len - 1) * 0.33),
+                      Math.floor((len - 1) * 0.66),
+                      len - 1
+                    ];
+                    return idxs.map((i, k) => (
+                      <span key={k}>{formatDateStr(dates[i])}</span>
+                    ));
+                  })()}
                 </div>
               </div>
             </div>
