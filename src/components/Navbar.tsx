@@ -24,7 +24,7 @@ export default function Navbar({ onSearchClick, onAuthorsClick, lang, setLang, o
           className="flex items-center gap-2.5 cursor-pointer select-none"
         >
           <img 
-            src="/logo.png" 
+            src="./logo.png" 
             alt="BSS Index Logo" 
             className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(245,158,11,0.3)] transition-transform duration-300 hover:scale-110 active:scale-95" 
           />
