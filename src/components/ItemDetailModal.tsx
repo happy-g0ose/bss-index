@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Info, Clock, Compass } from 'lucide-react';
 import type { BSSItem } from '../data/items';
@@ -14,6 +14,8 @@ interface ItemDetailModalProps {
 }
 
 export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSideB, lang }: ItemDetailModalProps) {
+  const [hoveredPointIndex, setHoveredPointIndex] = useState<number | null>(null);
+
   // Lock background scroll when open
   useEffect(() => {
     if (item) {
@@ -61,6 +63,53 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
   };
 
   const sparkline = drawSparkline();
+
+  // Mouse event handlers for interactive sparkline
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clientX = e.clientX - rect.left;
+    const svgX = (clientX / rect.width) * sparkline.width;
+    
+    let closestIdx = 0;
+    let minDistance = Infinity;
+    sparkline.points.forEach((p, idx) => {
+      const dist = Math.abs(p.x - svgX);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestIdx = idx;
+      }
+    });
+    
+    setHoveredPointIndex(closestIdx);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredPointIndex(null);
+  };
+
+  const getWeeksAgoText = (index: number, lang: Language) => {
+    if (lang === 'ru') {
+      switch (index) {
+        case 0: return '6 недель назад';
+        case 1: return '5 недель назад';
+        case 2: return '4 недели назад';
+        case 3: return '3 недели назад';
+        case 4: return '2 недели назад';
+        case 5: return 'Текущая неделя';
+        default: return '';
+      }
+    } else {
+      switch (index) {
+        case 0: return '6 weeks ago';
+        case 1: return '5 weeks ago';
+        case 2: return '4 weeks ago';
+        case 3: return '3 weeks ago';
+        case 4: return '2 weeks ago';
+        case 5: return 'Current week';
+        default: return '';
+      }
+    }
+  };
 
   // Get custom trading advice text based on demand
   const getTradingAdvice = () => {
@@ -207,7 +256,13 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
               
               <div className="relative rounded-xl bg-neutral-950/60 border border-white/5 p-4 overflow-hidden">
                 {/* SVG Area Sparkline */}
-                <svg className="w-full h-32 md:h-40 overflow-visible" viewBox={`0 0 ${sparkline.width} ${sparkline.height}`} preserveAspectRatio="none">
+                <svg 
+                  className="w-full h-32 md:h-40 overflow-visible cursor-crosshair" 
+                  viewBox={`0 0 ${sparkline.width} ${sparkline.height}`} 
+                  preserveAspectRatio="none"
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                >
                   <defs>
                     <linearGradient id="gradient-glow" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor={item.rarity === 'Мифический' ? '#f43f5e' : item.rarity === 'Легендарный' ? '#f59e0b' : '#a855f7'} stopOpacity="0.25" />
@@ -215,22 +270,121 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
                     </linearGradient>
                   </defs>
 
+                  {/* Vertical Guide Line */}
+                  {hoveredPointIndex !== null && (
+                    <line
+                      x1={sparkline.points[hoveredPointIndex].x}
+                      y1={0}
+                      x2={sparkline.points[hoveredPointIndex].x}
+                      y2={sparkline.height}
+                      stroke="rgba(255, 255, 255, 0.12)"
+                      strokeDasharray="4 4"
+                      strokeWidth="1.5"
+                    />
+                  )}
+
                   {/* Shaded Area */}
-                  <path d={sparkline.areaD} fill="url(#gradient-glow)" />
+                  <motion.path 
+                    d={sparkline.areaD} 
+                    fill="url(#gradient-glow)" 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.3 }}
+                  />
 
                   {/* Stroke Line */}
-                  <path d={sparkline.pathD} fill="none" stroke={item.rarity === 'Мифический' ? '#f43f5e' : item.rarity === 'Легендарный' ? '#f59e0b' : '#a855f7'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <motion.path 
+                    d={sparkline.pathD} 
+                    fill="none" 
+                    stroke={item.rarity === 'Мифический' ? '#f43f5e' : item.rarity === 'Легендарный' ? '#f59e0b' : '#a855f7'} 
+                    strokeWidth="2.5" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 1 }}
+                    transition={{ duration: 1.0, ease: "easeOut" }}
+                  />
 
                   {/* Dots & Labels */}
-                  {sparkline.points.map((p, idx) => (
-                    <g key={idx}>
-                      <circle cx={p.x} cy={p.y} r="4" className={item.textColor} fill="currentColor" />
-                      <text x={p.x} y={p.y - 10} textAnchor="middle" fill="#9ca3af" fontSize="9" className="font-mono font-bold">
-                        {item.historicalPrices[idx]}★
-                      </text>
-                    </g>
-                  ))}
+                  {sparkline.points.map((p, idx) => {
+                    const isHovered = hoveredPointIndex === idx;
+                    return (
+                      <g key={idx}>
+                        {isHovered && (
+                          <motion.circle
+                            cx={p.x}
+                            cy={p.y}
+                            r="12"
+                            initial={{ scale: 0.8, opacity: 0.5 }}
+                            animate={{ scale: 1.5, opacity: 0 }}
+                            transition={{ repeat: Infinity, duration: 1.2 }}
+                            fill={item.rarity === 'Мифический' ? 'rgba(244, 63, 94, 0.3)' : item.rarity === 'Легендарный' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(168, 85, 247, 0.3)'}
+                          />
+                        )}
+                        <motion.circle 
+                          cx={p.x} 
+                          cy={p.y} 
+                          animate={{
+                            r: isHovered ? 6 : 4,
+                            opacity: isHovered ? 1 : 0.6
+                          }}
+                          className={item.textColor} 
+                          fill="currentColor" 
+                        />
+                        <motion.text
+                          x={p.x}
+                          y={p.y - 12}
+                          textAnchor="middle"
+                          fill="#ffffff"
+                          fontSize="10"
+                          className="font-mono font-extrabold"
+                          initial={{ opacity: 0, y: p.y - 5 }}
+                          animate={{
+                            opacity: isHovered ? 1 : 0,
+                            y: isHovered ? p.y - 12 : p.y - 5,
+                          }}
+                          transition={{ duration: 0.15 }}
+                        >
+                          {item.historicalPrices[idx]}★
+                        </motion.text>
+                      </g>
+                    );
+                  })}
                 </svg>
+
+                {/* HTML Interactive Tooltip Overlay */}
+                {hoveredPointIndex !== null && (() => {
+                  const activePoint = sparkline.points[hoveredPointIndex];
+                  const priceValue = item.historicalPrices[hoveredPointIndex];
+                  const tooltipLeft = `${(activePoint.x / sparkline.width) * 100}%`;
+                  const tooltipTop = `${(activePoint.y / sparkline.height) * 100}%`;
+                  
+                  let transformStr = 'translateX(-50%)';
+                  if (hoveredPointIndex === 0) {
+                    transformStr = 'translateX(10px)';
+                  } else if (hoveredPointIndex === 5) {
+                    transformStr = 'translateX(-105%)';
+                  }
+                  
+                  return (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9, y: 5 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute z-30 pointer-events-none p-2 bg-neutral-900/90 backdrop-blur border border-white/10 rounded-lg shadow-xl text-[10px] font-mono leading-tight flex flex-col gap-0.5"
+                      style={{
+                        left: tooltipLeft,
+                        top: `calc(${tooltipTop} - 55px)`,
+                        transform: transformStr,
+                      }}
+                    >
+                      <span className="text-neutral-400 font-bold">{getWeeksAgoText(hoveredPointIndex, lang)}</span>
+                      <span className="text-amber-400 font-black text-[11px] flex items-center gap-0.5 justify-center">
+                        {priceValue} <span className="text-[9px] text-amber-500 font-normal">★</span>
+                      </span>
+                    </motion.div>
+                  );
+                })()}
 
                 {/* X-Axis labels */}
                 <div className="flex justify-between items-center text-[9px] text-neutral-500 font-mono font-bold mt-2 pt-2 border-t border-white/5">

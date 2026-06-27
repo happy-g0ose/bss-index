@@ -157,7 +157,7 @@ export default function App() {
       {/* Keyboard Shortcut Announcement Banner */}
       <div className="bg-gradient-to-r from-amber-500/80 to-yellow-600/80 text-neutral-950 text-[10px] sm:text-[11px] font-extrabold py-1 px-4 text-center tracking-wider uppercase select-none flex items-center justify-center gap-1.5 shadow-md border-b border-amber-500/10">
         <Command className="h-3 w-3" />
-        <span>{lang === 'ru' ? 'Нажмите' : 'Press'} <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">Ctrl + K</kbd> ({lang === 'ru' ? 'или' : 'or'} <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">⌘K</kbd>) {lang === 'ru' ? 'для быстрого поиска ценников стикеров' : 'to quick search sticker values'}</span>
+        <span>{lang === 'ru' ? 'Нажмите' : 'Press'} <kbd className="bg-neutral-950/20 px-1 py-0.5 rounded font-mono border border-neutral-950/10">Ctrl + K</kbd> {lang === 'ru' ? 'для быстрого поиска ценников стикеров' : 'to quick search sticker values'}</span>
       </div>
 
       <Navbar

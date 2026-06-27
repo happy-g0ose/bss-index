@@ -19,10 +19,11 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem, lang }: C
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Toggle open on CMD+K / CTRL+K
+  // Toggle open on Ctrl+K / Ctrl+L (supports Russian layout л/д)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      const key = e.key.toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && (key === 'k' || key === 'l' || key === 'л' || key === 'д')) {
         e.preventDefault();
         setIsOpen(!isOpen);
       }

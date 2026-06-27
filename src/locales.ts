@@ -9,8 +9,8 @@ type Dictionary = {
 export const locales: Dictionary = {
   ru: {
     'nav.tab.home': 'Главная',
-    'home.hero.title1': 'Найдите ваш идеальный',
-    'home.hero.title2': 'обмен в BSS',
+    'home.hero.title1': 'Ваш личный эксперт',
+    'home.hero.title2': 'по сделкам в BSS',
     'home.hero.desc': 'Быстрый доступ к ценникам стикеров и ваучеров Bee Swarm Simulator. Сравнивайте предметы, рассчитывайте выгоду в калькуляторе и торгуйте с умом!',
     'home.btn.values': 'Проверить цены',
     'home.btn.calc': 'Калькулятор обменов',
@@ -87,8 +87,8 @@ export const locales: Dictionary = {
   },
   en: {
     'nav.tab.home': 'Home',
-    'home.hero.title1': 'Find your perfect',
-    'home.hero.title2': 'BSS trade with confidence',
+    'home.hero.title1': 'Your Personal Expert',
+    'home.hero.title2': 'for BSS Trading',
     'home.hero.desc': 'Quick access to sticker and voucher values in Bee Swarm Simulator. Compare items, calculate profit in the trade calculator, and trade with confidence!',
     'home.btn.values': 'Check Values',
     'home.btn.calc': 'Trade Calculator',

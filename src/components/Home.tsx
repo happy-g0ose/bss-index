@@ -158,16 +158,16 @@ export default function Home({ onNavigate, onSearchClick, lang }: HomeProps) {
                     }}
                     whileHover={{ scale: 1.08, zIndex: 30 }}
                   >
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="popLayout">
                       <motion.div 
                         key={sticker.name}
-                        initial={{ scale: 1.15, y: 25, opacity: 0, filter: 'blur(0px)' }}
-                        animate={{ scale: 1, y: 0, opacity: 1, filter: 'blur(0px)' }}
-                        exit={{ scale: 0.7, y: -35, opacity: 0, filter: 'blur(4px)' }}
+                        initial={{ scale: 0.85, y: 15, opacity: 0 }}
+                        animate={{ scale: 1, y: 0, opacity: 1 }}
+                        exit={{ scale: 0.85, y: -15, opacity: 0 }}
                         transition={{ 
                           type: 'spring', 
-                          stiffness: 140, 
-                          damping: 16 
+                          stiffness: 260, 
+                          damping: 20 
                         }}
                         className={`p-3 bg-neutral-900/80 backdrop-blur-md rounded-2xl border ${sticker.borderColor} flex items-center gap-3 w-48 shadow-xl hover:border-amber-500/30 transition-colors`}
                         style={{ 
