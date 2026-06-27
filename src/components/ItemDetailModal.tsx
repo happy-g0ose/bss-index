@@ -376,7 +376,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
                       initial={{ opacity: 0, scale: 0.9, y: 5 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute z-30 pointer-events-none p-2 bg-neutral-900/90 backdrop-blur border border-white/10 rounded-lg shadow-xl text-[10px] font-mono leading-tight flex flex-col gap-0.5"
+                      className="absolute z-30 pointer-events-none p-2 bg-neutral-900/90 backdrop-blur border border-white/10 rounded-lg shadow-xl text-[10px] font-mono leading-tight flex flex-col gap-0.5 whitespace-nowrap"
                       style={{
                         left: tooltipLeft,
                         top: `calc(${tooltipTop} - 55px)`,
