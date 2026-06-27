@@ -2078,9 +2078,9 @@ const rawBssItemsData: BSSItem[] = [
     "name": "Nessie",
     "englishName": "Nessie",
     "category": "Искусство",
-    "value": 1.0,
-    "valueLow": 0.9,
-    "valueHigh": 1.1,
+    "value": 75.0,
+    "valueLow": 70.0,
+    "valueHigh": 80.0,
     "demand": "Низкий",
     "stability": "Падает",
     "rarity": "Обычный",
@@ -2090,12 +2090,12 @@ const rawBssItemsData: BSSItem[] = [
     "textColor": "text-emerald-400",
     "description": "Item is slow to sell and often receives lowballs. Индикаторы: Slow to sell, mostly lowballs, few real buyers.",
     "historicalPrices": [
-      1.1,
-      1.08,
-      1.06,
-      1.04,
-      1.02,
-      1.0
+      13.5,
+      19.0,
+      25.0,
+      33.0,
+      45.0,
+      75.0
     ],
     "image": "https://bssmvalues.com/images/Hivesticker_nessie.webp"
   },
@@ -4600,9 +4600,9 @@ const rawBssItemsData: BSSItem[] = [
     "name": "BBM From Below (BBM)",
     "englishName": "BBM From Below",
     "category": "Стикеры Пчелождества",
-    "value": 1.0,
-    "valueLow": 0.9,
-    "valueHigh": 1.1,
+    "value": 29.0,
+    "valueLow": 26.5,
+    "valueHigh": 31.5,
     "demand": "Хайп",
     "stability": "Растет",
     "rarity": "Обычный",
@@ -4612,12 +4612,12 @@ const rawBssItemsData: BSSItem[] = [
     "textColor": "text-emerald-400",
     "description": "Item sells instantly or near instantly at full value or above. Индикаторы: Sells instantly, people overpay for it, multiple buyers at once.",
     "historicalPrices": [
-      0.9,
-      0.92,
-      0.94,
-      0.96,
-      0.98,
-      1.0
+      9.0,
+      11.0,
+      15.0,
+      19.5,
+      24.0,
+      29.0
     ],
     "image": "https://bssmvalues.com/images/Hivesticker_bbm_from_below.webp"
   },
