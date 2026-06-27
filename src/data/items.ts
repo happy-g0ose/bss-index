@@ -3811,7 +3811,8 @@ const rawBssItemsData: BSSItem[] = [
       45.0,
       51.0,
       57.0,
-      77.5
+      77.5,
+      75.0
     ],
     "image": "https://bssmvalues.com/images/Hivesticker_nessie.webp",
     "historicalDates": [
@@ -3831,7 +3832,8 @@ const rawBssItemsData: BSSItem[] = [
       "2026-05-11",
       "2026-05-14",
       "2026-05-17",
-      "2026-05-21"
+      "2026-05-21",
+      "2026-06-27"
     ]
   },
   {
@@ -7288,7 +7290,8 @@ const rawBssItemsData: BSSItem[] = [
       17.0,
       19.0,
       24.0,
-      26.5
+      26.5,
+      29.0
     ],
     "image": "https://bssmvalues.com/images/Hivesticker_bbm_from_below.webp",
     "historicalDates": [
@@ -7299,7 +7302,8 @@ const rawBssItemsData: BSSItem[] = [
       "2026-03-26",
       "2026-04-02",
       "2026-04-14",
-      "2026-04-28"
+      "2026-04-28",
+      "2026-06-27"
     ]
   },
   {
@@ -10406,13 +10410,14 @@ const rawBssItemsData: BSSItem[] = [
       "2026-06-14"
     ]
   }
-];;;
+];;;;
 
 export const bssItemsData: BSSItem[] = rawBssItemsData.map(item => {
   const isSign = item.category === "Звездные знаки";
   const value = isSign ? 1.0 : item.value;
   const valueLow = isSign ? 1.0 : item.valueLow;
   const valueHigh = isSign ? 1.0 : item.valueHigh;
+  const historicalPrices = isSign ? item.historicalPrices.map(() => 1.0) : item.historicalPrices;
   const category = item.category === "Скины на куба" ? "Скины на каба" : item.category;
 
   let rarity: BSSItem['rarity'] = "Обычный";
@@ -10453,6 +10458,7 @@ export const bssItemsData: BSSItem[] = rawBssItemsData.map(item => {
     value,
     valueLow,
     valueHigh,
+    historicalPrices,
     rarity,
     glowColor,
     borderColor,
