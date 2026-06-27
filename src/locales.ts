@@ -213,6 +213,7 @@ export function translateCategory(cat: string, lang: Language): string {
     case 'Разное': return 'Misc';
     case 'Звездные знаки': return 'Star Signs';
     case 'Стикеры полей': return 'Field Stickers';
+    case 'Биквипы': return 'Beequips';
     default: return cat;
   }
 }
