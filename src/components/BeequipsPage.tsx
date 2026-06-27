@@ -244,6 +244,7 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
                 item={item}
                 index={idx}
                 lang={lang}
+                searchQuery={searchQuery}
                 onClick={() => onSelectItem(item)}
                 onAddToSideA={onAddToSideA}
                 onAddToSideB={onAddToSideB}

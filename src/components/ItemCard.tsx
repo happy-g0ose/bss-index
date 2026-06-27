@@ -13,9 +13,10 @@ interface ItemCardProps {
   onAddToSideB: (item: BSSItem) => void;
   index: number;
   lang: Language;
+  searchQuery?: string;
 }
 
-export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, index: _index, lang }: ItemCardProps) {
+export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, index: _index, lang, searchQuery }: ItemCardProps) {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -184,34 +185,108 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
 
       {/* Stats and Calculator triggers */}
       <div className="relative z-10 pt-4 border-t border-white/5 space-y-4">
-        {/* Core details */}
-        <div className="flex justify-between items-center text-xs select-none">
-          <div className="text-left">
-            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.value', lang)}</div>
-            <div className="flex flex-col items-start leading-none mt-1">
-              <span className="text-base font-black text-amber-400 font-mono flex items-center gap-0.5">
-                {Number(item.value.toFixed(2))} <span className="text-[10px] font-normal text-amber-500">★</span>
-              </span>
-              {item.valueLow !== item.valueHigh && (
-                <span className="text-[10px] text-neutral-500 font-bold font-mono">
-                  {Number(item.valueLow.toFixed(2))} - {Number(item.valueHigh.toFixed(2))}
+        {/* Core details - hidden for Beequips since their base price is not important */}
+        {item.category !== 'Биквипы' ? (
+          <div className="flex justify-between items-center text-xs select-none">
+            <div className="text-left">
+              <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.value', lang)}</div>
+              <div className="flex flex-col items-start leading-none mt-1">
+                <span className="text-base font-black text-amber-400 font-mono flex items-center gap-0.5">
+                  {Number(item.value.toFixed(2))} <span className="text-[10px] font-normal text-amber-500">★</span>
                 </span>
-              )}
+                {item.valueLow !== item.valueHigh && (
+                  <span className="text-[10px] text-neutral-500 font-bold font-mono">
+                    {Number(item.valueLow.toFixed(2))} - {Number(item.valueHigh.toFixed(2))}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.demand', lang)}</div>
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded border block mt-0.5 ${getDemandColor(item.demand)}`}>
+                {translateDemand(item.demand, lang)}
+              </span>
+            </div>
+            <div className="text-right">
+              <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.stability', lang)}</div>
+              <div className="mt-0.5 flex justify-end">
+                {getStabilityIcon(item.stability)}
+              </div>
             </div>
           </div>
-          <div className="text-center">
-            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.demand', lang)}</div>
-            <span className={`text-[10px] font-bold px-2 py-0.5 rounded border block mt-0.5 ${getDemandColor(item.demand)}`}>
-              {translateDemand(item.demand, lang)}
-            </span>
-          </div>
-          <div className="text-right">
-            <div className="text-[10px] text-neutral-500 uppercase tracking-widest">{t('item.stability', lang)}</div>
-            <div className="mt-0.5 flex justify-end">
-              {getStabilityIcon(item.stability)}
-            </div>
-          </div>
-        </div>
+        ) : (
+          /* For Beequips, if there's a search query matching a roll, display the matched rolls */
+          searchQuery && item.beequipData && (() => {
+            const raw = searchQuery.trim().toLowerCase();
+            if (!raw) return null;
+            
+            const matches: any[] = [];
+            item.beequipData.forEach(group => {
+              group.rolls.forEach(roll => {
+                if (roll.rollName.toLowerCase().includes(raw)) {
+                  matches.push(roll);
+                }
+              });
+            });
+            
+            if (matches.length === 0) return null;
+            
+            return (
+              <div className="space-y-2 mt-2">
+                {matches.map((roll, rIdx) => {
+                  let demandStyle = 'bg-neutral-800 text-neutral-400 border-neutral-700/20';
+                  if (roll.demand === 'Хайп') demandStyle = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+                  else if (roll.demand === 'Высокий') demandStyle = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                  else if (roll.demand === 'Средний') demandStyle = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                  else demandStyle = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+
+                  const formatVal = (v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v.toString();
+                  const valueText = roll.valueLow === roll.valueHigh 
+                    ? `${formatVal(roll.valueLow)} ★` 
+                    : `${formatVal(roll.valueLow)} - ${formatVal(roll.valueHigh)} ★`;
+
+                  return (
+                    <div key={rIdx} className="flex items-center justify-between gap-2 text-xs p-1.5 rounded-lg bg-neutral-900/40 border border-white/5">
+                      <span className="font-medium text-neutral-200 truncate pr-1 max-w-[120px]" title={roll.rollName}>
+                        {roll.rollName}
+                      </span>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="font-mono font-bold text-amber-400 bg-amber-400/5 px-1.5 py-0.5 rounded border border-amber-400/10 whitespace-nowrap text-[10px]">
+                          {valueText}
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${demandStyle}`}>
+                          {roll.demand}
+                        </span>
+                        <div className="flex items-center gap-0.5 ml-0.5">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const rollItem = { ...item, id: `${item.id}-roll-${roll.rollName.replace(/\s+/g, '-')}`, name: `${item.name} (${roll.rollName})`, englishName: `${item.englishName} (${roll.rollName})`, value: roll.value, valueLow: roll.valueLow, valueHigh: roll.valueHigh, demand: roll.demand };
+                              onAddToSideA(rollItem);
+                            }}
+                            className="w-5 h-5 flex items-center justify-center rounded bg-violet-600 hover:bg-violet-500 text-white font-bold cursor-pointer transition-colors"
+                          >
+                            <span className="text-[9px]">+A</span>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const rollItem = { ...item, id: `${item.id}-roll-${roll.rollName.replace(/\s+/g, '-')}`, name: `${item.name} (${roll.rollName})`, englishName: `${item.englishName} (${roll.rollName})`, value: roll.value, valueLow: roll.valueLow, valueHigh: roll.valueHigh, demand: roll.demand };
+                              onAddToSideB(rollItem);
+                            }}
+                            className="w-5 h-5 flex items-center justify-center rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold cursor-pointer transition-colors"
+                          >
+                            <span className="text-[9px]">+B</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })()
+        )}
 
         {/* Quick Add buttons */}
         <div className="grid grid-cols-2 gap-2 select-none">

@@ -337,6 +337,7 @@ export default function App() {
                       onAddToSideA={handleAddToSideA}
                       onAddToSideB={handleAddToSideB}
                       lang={lang}
+                      searchQuery={searchQuery}
                     />
                   ))
                 ) : (
