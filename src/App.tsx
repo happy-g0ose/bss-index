@@ -223,7 +223,6 @@ export default function App() {
                 : 'bg-neutral-900/40 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-900/60 border border-white/5'
             }`}
           >
-            <span>🐝</span>
             {t('nav.tab.beequips', lang)}
           </button>
         </div>

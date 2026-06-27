@@ -91,9 +91,9 @@ const allBeequips = bssItemsData.filter(item => item.category === 'Биквип�
 function getStatBadge(groupName: string): string | null {
   const upper = groupName.toUpperCase();
   // Sort by length descending so CRAH matches before CR
-  const sorted = Object.keys(STAT_ABBR_LABELS).sort((a, b) => b.length - a.length);
+  const sorted = Object.keys(STAT_ABBR_LABELS).sort((a, b) => STAT_ABBR_LABELS[b].length - STAT_ABBR_LABELS[a].length);
   for (const abbr of sorted) {
-    if (upper.includes(abbr)) return abbr;
+    if (upper.includes(STAT_ABBR_LABELS[abbr].toUpperCase())) return abbr;
   }
   return null;
 }
@@ -231,7 +231,7 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
       ) : (
         <motion.div 
           layout
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
         >
           <AnimatePresence mode="popLayout">
             {filteredBeequips.map((item, idx) => (
