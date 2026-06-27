@@ -265,9 +265,12 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
                             return v.toString();
                           };
                           
-                          const valueText = roll.valueLow === roll.valueHigh 
-                            ? `${formatVal(roll.valueLow)} ★` 
-                            : `${formatVal(roll.valueLow)} - ${formatVal(roll.valueHigh)} ★`;
+                          let valueText = 'TBD';
+                          if (roll.valueLow !== 0 || roll.valueHigh !== 0) {
+                            valueText = roll.valueLow === roll.valueHigh 
+                              ? `${formatVal(roll.valueLow)} ★` 
+                              : `${formatVal(roll.valueLow)} - ${formatVal(roll.valueHigh)} ★`;
+                          }
 
                           return (
                             <div key={rIdx} className="flex items-center justify-between gap-3 text-xs p-2 rounded-lg bg-neutral-900/40 hover:bg-neutral-900/80 transition-colors border border-white/5">

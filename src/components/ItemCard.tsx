@@ -243,9 +243,12 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
                   else demandStyle = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
 
                   const formatVal = (v: number) => v >= 1000 ? `${(v / 1000).toFixed(1)}k` : v.toString();
-                  const valueText = roll.valueLow === roll.valueHigh 
-                    ? `${formatVal(roll.valueLow)} ★` 
-                    : `${formatVal(roll.valueLow)} - ${formatVal(roll.valueHigh)} ★`;
+                  let valueText = 'TBD';
+                  if (roll.valueLow !== 0 || roll.valueHigh !== 0) {
+                    valueText = roll.valueLow === roll.valueHigh 
+                      ? `${formatVal(roll.valueLow)} ★` 
+                      : `${formatVal(roll.valueLow)} - ${formatVal(roll.valueHigh)} ★`;
+                  }
 
                   return (
                     <div key={rIdx} className="flex items-center justify-between gap-2 text-xs p-1.5 rounded-lg bg-neutral-900/40 border border-white/5">
