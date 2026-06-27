@@ -89,11 +89,13 @@ export const RU_ABBR_MAP: Record<string, string> = {
 const allBeequips = bssItemsData.filter(item => item.category === 'Биквипы');
 
 function getStatBadge(groupName: string): string | null {
-  const upper = groupName.toUpperCase();
+  const normalize = (s: string) => s.toUpperCase().replace(/[-\s]/g, '');
+  const normalizedGroup = normalize(groupName);
+
   // Sort by length descending so CRAH matches before CR
   const sorted = Object.keys(STAT_ABBR_LABELS).sort((a, b) => STAT_ABBR_LABELS[b].length - STAT_ABBR_LABELS[a].length);
   for (const abbr of sorted) {
-    if (upper.includes(STAT_ABBR_LABELS[abbr].toUpperCase())) return abbr;
+    if (normalizedGroup.includes(normalize(STAT_ABBR_LABELS[abbr]))) return abbr;
   }
   return null;
 }

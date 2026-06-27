@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Info, Clock, Compass, SlidersHorizontal } from 'lucide-react';
+import { X, Info, Clock, SlidersHorizontal } from 'lucide-react';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
 import { t, translateDemand, translateStability, translateCategory, translateRarity } from '../locales';
@@ -116,27 +116,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
     }
   };
 
-  // Get custom trading advice text based on demand
-  const getTradingAdvice = () => {
-    if (item.demand === 'Хайп') {
-      return lang === 'ru'
-        ? 'Спрос на этот предмет сейчас на пике. Цены могут быть завышены. Рекомендуется продавать (обменивать на Star Signs) или держать в инкубаторе до стабилизации рынка.'
-        : 'Demand for this item is at its peak right now. Prices may be inflated. It is recommended to sell (trade for Star Signs) or hold onto it until the market stabilizes.';
-    }
-    if (item.demand === 'Высокий') {
-      return lang === 'ru'
-        ? 'Высоколиквидный предмет, который легко обменять. Покупатели соглашаются на сделки охотно. Полезно использовать для доплаты в крупных обменах.'
-        : 'Highly liquid item that is easy to trade. Buyers accept offers willingly. Great for use as sweet/adds in larger trades.';
-    }
-    if (item.demand === 'Средний') {
-      return lang === 'ru'
-        ? 'Предмет имеет стабильный спрос. Цена адекватна, риск резкого падения минимален. Хороший лот для повседневных сделок без переплат.'
-        : 'The item has stable demand. Price is fair, risk of sharp drop is minimal. A good asset for everyday trades without overpaying.';
-    }
-    return lang === 'ru'
-      ? 'Предмет имеет низкий спрос на рынке. Трейдеры берут его неохотно, часто только в качестве мелкой сдачи. Продавать сложно, лучше придерживать для квестов.'
-      : 'The item has low market demand. Traders are reluctant to take it, often only as small fillers. Hard to sell, best kept for quests.';
-  };
+
 
   return (
     <AnimatePresence>
@@ -499,16 +479,6 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
               </div>
             )}
 
-            {/* Trading Advice Box */}
-            <div className="p-4 rounded-xl bg-neutral-950/60 border border-white/5 space-y-2">
-              <h4 className="text-xs uppercase font-bold tracking-widest text-neutral-400 flex items-center gap-1.5 select-none">
-                <Compass className="h-4 w-4 text-purple-400" />
-                {lang === 'ru' ? 'Совет по торговле' : 'Trading Advice'}
-              </h4>
-              <p className="text-xs md:text-sm text-neutral-400 leading-relaxed font-sans font-medium">
-                {getTradingAdvice()}
-              </p>
-            </div>
           </div>
 
           {/* Footer controls: Add directly to Trade side A/B */}
