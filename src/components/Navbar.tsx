@@ -23,11 +23,11 @@ export default function Navbar({ onSearchClick, onAuthorsClick, lang, setLang, o
           }} 
           className="flex items-center gap-2.5 cursor-pointer select-none"
         >
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center shadow-lg shadow-amber-500/20">
-            <svg className="h-5 w-5 text-neutral-950" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 2a1 1 0 01.832.445l5 7.5a1 1 0 010 1.11l-5 7.5A1 1 0 0110 19a1 1 0 01-.832-.445l-5-7.5a1 1 0 010-1.11l5-7.5A1 1 0 0110 2zm0 2.443L5.628 10 10 15.557 14.372 10 10 4.443z" clipRule="evenodd" />
-            </svg>
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="BSS Index Logo" 
+            className="h-9 w-9 object-contain drop-shadow-[0_2px_10px_rgba(245,158,11,0.3)] transition-transform duration-300 hover:scale-110 active:scale-95" 
+          />
           <div className="leading-none text-left">
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-black tracking-widest uppercase bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent font-sans">
