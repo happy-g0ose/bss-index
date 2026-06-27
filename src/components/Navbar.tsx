@@ -29,9 +29,14 @@ export default function Navbar({ onSearchClick, onAuthorsClick, lang, setLang, o
             </svg>
           </div>
           <div className="leading-none text-left">
-            <span className="text-sm font-black tracking-widest uppercase bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent font-sans">
-              BSS INDEX
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-black tracking-widest uppercase bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent font-sans">
+                BSS INDEX
+              </span>
+              <span className="px-1 py-0.5 rounded text-[8px] font-black bg-amber-500/10 text-amber-400 border border-amber-500/25 uppercase tracking-wider select-none align-middle inline-block">
+                BETA
+              </span>
+            </div>
             <span className="text-[10px] text-neutral-400 block font-bold tracking-tight">
               {t('hero.badge', lang).split(' ')[0]}
             </span>
