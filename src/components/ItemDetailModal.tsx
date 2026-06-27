@@ -184,42 +184,44 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
             </div>
 
             {/* Core Stats Badge Grid */}
-            <div className="grid grid-cols-3 gap-4 border-y border-white/5 py-4">
-              <div className="text-center md:text-left overflow-hidden">
-                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.baseValue', lang)}</div>
-                <div className="flex flex-col items-center md:items-start leading-none mt-1">
-                  <span className="text-xl md:text-2xl font-black text-amber-400 font-mono flex items-center gap-0.5">
-                    {Number(item.value.toFixed(2))} <span className="text-xs font-normal text-amber-500">★</span>
-                  </span>
-                  {item.valueLow !== item.valueHigh && (
-                    <span className="text-xs text-neutral-500 font-bold font-mono">
-                      {Number(item.valueLow.toFixed(2))} - {Number(item.valueHigh.toFixed(2))}
+            {item.category !== 'Биквипы' && (
+              <div className="grid grid-cols-3 gap-4 border-y border-white/5 py-4">
+                <div className="text-center md:text-left overflow-hidden">
+                  <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.baseValue', lang)}</div>
+                  <div className="flex flex-col items-center md:items-start leading-none mt-1">
+                    <span className="text-xl md:text-2xl font-black text-amber-400 font-mono flex items-center gap-0.5">
+                      {Number(item.value.toFixed(2))} <span className="text-xs font-normal text-amber-500">★</span>
                     </span>
-                  )}
+                    {item.valueLow !== item.valueHigh && (
+                      <span className="text-xs text-neutral-500 font-bold font-mono">
+                        {Number(item.valueLow.toFixed(2))} - {Number(item.valueHigh.toFixed(2))}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-center md:text-left">
+                  <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.demandLevel', lang)}</div>
+                  <span className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded border inline-block mt-1 ${
+                    item.demand === 'Хайп' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                    item.demand === 'Высокий' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
+                    item.demand === 'Средний' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
+                    'bg-neutral-800 text-neutral-400 border-neutral-700'
+                  }`}>
+                    {translateDemand(item.demand, lang)}
+                  </span>
+                </div>
+                <div className="text-center md:text-left">
+                  <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.stability', lang)}</div>
+                  <span className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded border inline-block mt-1 ${
+                    item.stability === 'Растет' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                    item.stability === 'Падает' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                    'bg-neutral-800 text-neutral-400 border-neutral-700'
+                  }`}>
+                    {translateStability(item.stability, lang)}
+                  </span>
                 </div>
               </div>
-              <div className="text-center md:text-left">
-                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.demandLevel', lang)}</div>
-                <span className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded border inline-block mt-1 ${
-                  item.demand === 'Хайп' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                  item.demand === 'Высокий' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
-                  item.demand === 'Средний' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                  'bg-neutral-800 text-neutral-400 border-neutral-700'
-                }`}>
-                  {translateDemand(item.demand, lang)}
-                </span>
-              </div>
-              <div className="text-center md:text-left">
-                <div className="text-[10px] text-neutral-500 uppercase tracking-widest font-semibold">{t('item.stability', lang)}</div>
-                <span className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded border inline-block mt-1 ${
-                  item.stability === 'Растет' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                  item.stability === 'Падает' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                  'bg-neutral-800 text-neutral-400 border-neutral-700'
-                }`}>
-                  {translateStability(item.stability, lang)}
-                </span>
-              </div>
-            </div>
+            )}
 
             {/* Description */}
             <div className="space-y-2">
@@ -228,7 +230,11 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
                 {t('item.desc', lang)}
               </h4>
               <p className="text-sm md:text-base text-neutral-300 leading-relaxed font-sans font-medium">
-                {lang === 'en' ? item.description.replace('Индикаторы:', 'Indicators:') : item.description}
+                {lang === 'en' 
+                  ? item.description
+                      .replace('Индикаторы:', 'Indicators:')
+                      .replace('Экипировка для пчелы. Нажмите для подробного просмотра всех роллов и их стоимости.', 'Bee equipment. Click to view all rolls and their values in detail.')
+                  : item.description}
               </p>
             </div>
 
