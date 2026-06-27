@@ -110,6 +110,18 @@ function resolveQuery(raw: string): { statAbbr: string | null; query: string } {
   return { statAbbr: null, query: q };
 }
 
+const translitMap: Record<string, string> = {
+  'а': 'a', 'б': 'b', 'в': 'w', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e',
+  'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
+  'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+  'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ъ': '',
+  'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya'
+};
+
+export function transliterate(text: string): string {
+  return text.split('').map(char => translitMap[char] || char).join('');
+}
+
 export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelectItem }: BeequipsPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortingOption, setSortingOption] = useState<'value-desc' | 'value-asc' | 'demand-desc' | 'name-asc'>('value-desc');
@@ -123,6 +135,7 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
 
   const filteredBeequips = useMemo(() => {
     const raw = searchQuery.trim().toLowerCase();
+    const transRaw = transliterate(raw);
     const { statAbbr } = resolveQuery(raw);
 
     if (!raw) return allBeequips;
@@ -130,7 +143,6 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
     return allBeequips.filter(item => {
       if (!item.beequipData) return false;
 
-      // If this is a stat abbr query, match only items whose groups contain that stat
       if (statAbbr) {
         for (const group of item.beequipData) {
           const badge = getStatBadge(group.groupName);
@@ -139,12 +151,13 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
         return false;
       }
 
-      // Otherwise: match by name or group/roll name
-      if (item.name.toLowerCase().includes(raw) || item.englishName.toLowerCase().includes(raw)) return true;
+      if (item.name.toLowerCase().includes(raw) || item.englishName.toLowerCase().includes(raw) ||
+          item.name.toLowerCase().includes(transRaw) || item.englishName.toLowerCase().includes(transRaw)) return true;
+          
       for (const group of item.beequipData) {
-        if (group.groupName.toLowerCase().includes(raw)) return true;
+        if (group.groupName.toLowerCase().includes(raw) || group.groupName.toLowerCase().includes(transRaw)) return true;
         for (const roll of group.rolls) {
-          if (roll.rollName.toLowerCase().includes(raw)) return true;
+          if (roll.rollName.toLowerCase().includes(raw) || roll.rollName.toLowerCase().includes(transRaw)) return true;
         }
       }
       return false;
@@ -235,7 +248,7 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
       ) : (
         <motion.div 
           layout
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+          className="columns-1 md:columns-2 xl:columns-3 gap-4 space-y-4"
         >
           <AnimatePresence mode="popLayout">
             {filteredBeequips.map((item, idx) => (

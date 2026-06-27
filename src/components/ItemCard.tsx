@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus, Plus } from 'lucide-react';
+import { transliterate } from './BeequipsPage';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
 import { t, translateDemand, translateCategory, translateRarity } from '../locales';
@@ -136,7 +137,7 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
       onMouseMove={handleMouseMove}
       onClick={onClick}
       style={{ '--hover-glow': item.glowColor } as any}
-      className={`group relative rounded-2xl p-5 md:p-6 flex flex-col justify-between overflow-hidden cursor-pointer glass-card glass-card-hover border ${item.borderColor}`}
+      className={`break-inside-avoid mb-4 group relative rounded-2xl p-5 md:p-6 flex flex-col justify-between overflow-hidden cursor-pointer glass-card glass-card-hover border ${item.borderColor}`}
     >
       {/* Dynamic mouse glow overlay */}
       <div
@@ -218,12 +219,13 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
           /* For Beequips, if there's a search query matching a roll, display the matched rolls */
           searchQuery && item.beequipData && (() => {
             const raw = searchQuery.trim().toLowerCase();
+            const transRaw = transliterate(raw);
             if (!raw) return null;
             
             const matches: any[] = [];
             item.beequipData.forEach(group => {
               group.rolls.forEach(roll => {
-                if (roll.rollName.toLowerCase().includes(raw)) {
+                if (roll.rollName.toLowerCase().includes(raw) || roll.rollName.toLowerCase().includes(transRaw)) {
                   matches.push(roll);
                 }
               });
