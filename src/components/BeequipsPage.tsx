@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search, SlidersHorizontal, Filter } from 'lucide-react';
 import { bssItemsData } from '../data/items';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
@@ -112,6 +112,14 @@ function resolveQuery(raw: string): { statAbbr: string | null; query: string } {
 
 export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelectItem }: BeequipsPageProps) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortingOption, setSortingOption] = useState<'value-desc' | 'value-asc' | 'demand-desc' | 'name-asc'>('value-desc');
+
+  const demandRank: Record<string, number> = {
+    'Хайп': 4,
+    'Высокий': 3,
+    'Средний': 2,
+    'Низкий': 1,
+  };
 
   const filteredBeequips = useMemo(() => {
     const raw = searchQuery.trim().toLowerCase();
@@ -140,48 +148,64 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
         }
       }
       return false;
+    })
+    .sort((a, b) => {
+      switch (sortingOption) {
+        case 'value-asc':
+          return a.value - b.value;
+        case 'demand-desc':
+          return demandRank[b.demand] - demandRank[a.demand];
+        case 'name-asc':
+          return a.name.localeCompare(b.name, 'ru');
+        case 'value-desc':
+        default:
+          return b.value - a.value;
+      }
     });
-  }, [searchQuery]);
+  }, [searchQuery, sortingOption]);
 
   const { statAbbr: activeStatFilter } = resolveQuery(searchQuery);
 
   return (
     <section className="space-y-6 animate-in fade-in duration-500">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-            <span className="text-2xl">🐝</span>
-            <span className="bg-gradient-to-r from-amber-400 to-yellow-200 bg-clip-text text-transparent">
-              {lang === 'ru' ? 'Биквипы' : 'Beequips'}
-            </span>
-          </h2>
-          <p className="text-xs text-neutral-500 mt-1 font-medium">
-            {lang === 'ru'
-              ? `${allBeequips.length} экипировок — нажмите карточку чтобы развернуть роллы`
-              : `${allBeequips.length} beequips — click a card to expand its rolls`}
-          </p>
+      {/* Controls Bar */}
+      <div className="space-y-4">
+        {/* Top controls: Search & Sort */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Local Search bar */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
+            <input
+              type="text"
+              placeholder={lang === 'ru' ? 'Поиск или аббрев. (хах, wfc, bp...)' : 'Search or abbrev. (hah, wfc, bp...)'}
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-neutral-900/50 border border-white/5 placeholder-neutral-500 text-xs outline-none focus:border-amber-500/40 focus:ring-1 focus:ring-amber-500/20 text-neutral-100 transition-all"
+            />
+          </div>
+
+          {/* Sorting options select */}
+          <div className="flex items-center gap-2 select-none self-end md:self-auto">
+            <SlidersHorizontal className="h-4 w-4 text-neutral-500" />
+            <span className="text-xs text-neutral-400 font-bold">{lang === 'ru' ? 'Сортировка:' : 'Sort by:'}</span>
+            <select
+              value={sortingOption}
+              onChange={(e) => setSortingOption(e.target.value as any)}
+              className="bg-neutral-900/50 border border-white/5 text-xs text-neutral-300 font-semibold py-1.5 px-3 rounded-xl outline-none cursor-pointer hover:border-white/10"
+            >
+              <option value="value-desc">{lang === 'ru' ? 'По ценности (убыв.)' : 'By value (desc)'}</option>
+              <option value="value-asc">{lang === 'ru' ? 'По ценности (возр.)' : 'By value (asc)'}</option>
+              <option value="demand-desc">{lang === 'ru' ? 'По спросу (убыв.)' : 'By demand (desc)'}</option>
+              <option value="name-asc">{lang === 'ru' ? 'По названию (А-Я)' : 'By name (A-Z)'}</option>
+            </select>
+          </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
-          <input
-            type="text"
-            placeholder={lang === 'ru' ? 'Поиск или аббрев. (хах, wfc, bp...)' : 'Search or abbrev. (hah, wfc, bp...)'}
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-neutral-900/60 border border-white/5 placeholder-neutral-500 text-xs outline-none focus:border-amber-500/40 focus:ring-1 focus:ring-amber-500/20 text-neutral-100 transition-all"
-          />
-        </div>
-      </div>
-
-      {/* Abbreviation quick-filter chips */}
-      <div className="space-y-2">
-        <div className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest select-none">
-          {lang === 'ru' ? 'Быстрый фильтр по характеристике:' : 'Quick stat filter:'}
-        </div>
-        <div className="flex flex-wrap gap-1.5">
+        {/* Category tabs (Stat Filters) */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-white/5 pb-4 select-none">
+          <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest mr-2 flex items-center gap-1">
+            <Filter className="h-3.5 w-3.5 text-neutral-500" /> {lang === 'ru' ? 'Фильтр:' : 'Filter:'}
+          </span>
           {Object.entries(STAT_ABBR_LABELS).map(([abbr, full]) => {
             const isActive = activeStatFilter === abbr;
             return (
@@ -189,39 +213,17 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
                 key={abbr}
                 onClick={() => setSearchQuery(isActive ? '' : abbr.toLowerCase())}
                 title={full}
-                className={`px-2 py-0.5 rounded-full text-[9px] font-black font-mono border transition-all cursor-pointer select-none uppercase tracking-wider ${
+                className={`px-3.5 py-1.5 text-xs font-bold rounded-lg border transition-all duration-200 cursor-pointer ${
                   isActive
-                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/30'
-                    : 'border-white/5 bg-neutral-900/40 text-neutral-400 hover:bg-amber-500/10 hover:text-amber-400 hover:border-amber-500/20'
+                    ? 'bg-amber-500 border-amber-500 text-neutral-950 font-black shadow-md'
+                    : 'bg-neutral-900/40 border-white/5 text-neutral-400 hover:text-neutral-200 hover:border-white/10'
                 }`}
               >
                 {abbr}
               </button>
             );
           })}
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="px-2 py-0.5 rounded-full text-[9px] font-black border border-rose-500/20 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-all cursor-pointer"
-            >
-              ✕ {lang === 'ru' ? 'Сброс' : 'Clear'}
-            </button>
-          )}
         </div>
-
-        {/* Active filter info */}
-        {activeStatFilter && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 text-xs text-amber-400 font-semibold"
-          >
-            <span className="px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 font-mono font-black text-[10px]">{activeStatFilter}</span>
-            <span className="text-neutral-400">=</span>
-            <span>{STAT_ABBR_LABELS[activeStatFilter]}</span>
-            <span className="text-neutral-500 ml-1">· {filteredBeequips.length} {lang === 'ru' ? 'биквипов' : 'beequips'}</span>
-          </motion.div>
-        )}
       </div>
 
       {/* Items Grid */}
