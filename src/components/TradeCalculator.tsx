@@ -226,7 +226,7 @@ export default function TradeCalculator({
               </span>
             </h3>
             
-            <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1 flex-1">
+            <div className="space-y-2 pr-1 flex-1">
               <AnimatePresence mode="popLayout">
                 {sideA.map((item, idx) => (
                   <motion.div
@@ -242,7 +242,6 @@ export default function TradeCalculator({
                         <img
                           src={item.image}
                           alt=""
-                          crossOrigin="anonymous"
                           className="h-5.5 w-5.5 object-contain"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
@@ -299,7 +298,7 @@ export default function TradeCalculator({
               </span>
             </h3>
             
-            <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1 flex-1">
+            <div className="space-y-2 pr-1 flex-1">
               <AnimatePresence mode="popLayout">
                 {sideB.map((item, idx) => (
                   <motion.div
@@ -315,7 +314,6 @@ export default function TradeCalculator({
                         <img
                           src={item.image}
                           alt=""
-                          crossOrigin="anonymous"
                           className="h-5.5 w-5.5 object-contain"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
