@@ -5,7 +5,7 @@ import { bssItemsData } from '../data/items';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
 import { translateRarity } from '../locales';
-import { STAT_ABBR_LABELS, RU_ABBR_MAP } from './BeequipsPage';
+import { STAT_ABBR_LABELS, RU_ABBR_MAP, transliterate } from './BeequipsPage';
 
 interface CommandMenuProps {
   isOpen: boolean;
@@ -74,9 +74,12 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem, lang }: C
     if (item.category === 'Биквипы') return false;
     const q = searchQuery.toLowerCase();
     if (!q) return false;
+    const transQ = transliterate(q);
     return (
       item.name.toLowerCase().includes(q) ||
       item.englishName.toLowerCase().includes(q) ||
+      item.name.toLowerCase().includes(transQ) ||
+      item.englishName.toLowerCase().includes(transQ) ||
       item.category.toLowerCase().includes(q) ||
       item.rarity.toLowerCase().includes(q)
     );
@@ -91,7 +94,13 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem, lang }: C
       ? bssItemsData.filter(item => {
           if (item.category !== 'Биквипы') return false;
           const q = searchQuery.toLowerCase();
-          return item.name.toLowerCase().includes(q) || item.englishName.toLowerCase().includes(q);
+          const transQ = transliterate(q);
+          return (
+            item.name.toLowerCase().includes(q) || 
+            item.englishName.toLowerCase().includes(q) ||
+            item.name.toLowerCase().includes(transQ) || 
+            item.englishName.toLowerCase().includes(transQ)
+          );
         })
       : [];
 

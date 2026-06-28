@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search, ChevronLeft } from 'lucide-react';
 import { bssItemsData } from '../data/items';
+import { transliterate } from './BeequipsPage';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
 import { t, translateCategory } from '../locales';
@@ -48,9 +49,12 @@ export default function ItemPickerModal({ isOpen, onClose, onSelect, lang }: Ite
       if (selectedCategory !== 'Все' && item.category !== selectedCategory) return false;
       const query = searchQuery.toLowerCase();
       if (!query) return true;
+      const transQ = transliterate(query);
       return (
         item.name.toLowerCase().includes(query) ||
-        item.englishName.toLowerCase().includes(query)
+        item.englishName.toLowerCase().includes(query) ||
+        item.name.toLowerCase().includes(transQ) ||
+        item.englishName.toLowerCase().includes(transQ)
       );
     });
   }, [searchQuery, selectedCategory]);

@@ -13,6 +13,7 @@ import { bssItemsData } from './data/items';
 import type { BSSItem } from './data/items';
 import type { Language } from './locales';
 import { t, translateCategory } from './locales';
+import { transliterate } from './components/BeequipsPage';
 
 type CategoryType = string;
 type SortType = 'value-desc' | 'value-asc' | 'demand-desc' | 'name-asc';
@@ -134,9 +135,12 @@ export default function App() {
       }
       // Search filter
       const query = searchQuery.toLowerCase();
+      const transQ = transliterate(query);
       return (
         item.name.toLowerCase().includes(query) ||
         item.englishName.toLowerCase().includes(query) ||
+        item.name.toLowerCase().includes(transQ) ||
+        item.englishName.toLowerCase().includes(transQ) ||
         item.category.toLowerCase().includes(query) ||
         item.rarity.toLowerCase().includes(query)
       );
