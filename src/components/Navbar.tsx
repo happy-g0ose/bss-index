@@ -66,6 +66,20 @@ export default function Navbar({ onSearchClick, onAuthorsClick, lang, setLang, o
             <span className="hidden sm:inline">{t('nav.authors', lang)}</span>
           </button>
 
+          {/* Discord Link */}
+          <a
+            href="https://discord.gg/ZXmycxjvv9"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Join our Discord"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#5865F2]/20 bg-[#5865F2]/10 hover:bg-[#5865F2]/25 hover:border-[#5865F2]/40 text-[#8a96ff] hover:text-white text-xs select-none cursor-pointer font-bold transition-all duration-300"
+          >
+            <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 127.14 96.36">
+              <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.86,54.65,1,77.53A105.73,105.73,0,0,0,32,96.36a77.7,77.7,0,0,0,6.63-10.85,68.43,68.43,0,0,1-10.5-5c.88-.65,1.72-1.34,2.51-2.07a75.76,75.76,0,0,0,72.93,0c.79.73,1.63,1.42,2.51,2.07a68.51,68.51,0,0,1-10.5,5,77.06,77.06,0,0,0,6.63,10.85,105.73,105.73,0,0,0,31.06-18.83C129,50.7,122.64,27.78,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.9,46,53.9,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.14,46,96.14,53,91,65.69,84.69,65.69Z"/>
+            </svg>
+            <span className="hidden sm:inline">Discord</span>
+          </a>
+
           {/* Language Toggle */}
           <button
             onClick={() => setLang(lang === 'ru' ? 'en' : 'ru')}
