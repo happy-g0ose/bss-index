@@ -261,7 +261,7 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
 
                   return (
                     <div key={rIdx} className="flex items-center justify-between gap-2 text-xs p-1.5 rounded-lg bg-neutral-900/40 border border-white/5">
-                      <span className="font-medium text-neutral-200 truncate pr-1 max-w-[120px]" title={roll.rollName}>
+                      <span className="font-medium text-neutral-200 flex-1 min-w-0 truncate pr-1" title={roll.rollName}>
                         {roll.rollName}
                       </span>
                       <div className="flex items-center gap-1.5 shrink-0">

@@ -173,7 +173,7 @@ export default function TradeCalculator({
               {t('calc.title', lang)}
             </h2>
           </div>
-          <div className="flex items-center gap-3 self-end sm:self-auto">
+          <div className="flex items-center gap-3 self-end sm:self-auto" data-html2canvas-ignore="true">
             {/* Copy Link Button */}
             <button
               onClick={handleCopyLink}
@@ -242,6 +242,7 @@ export default function TradeCalculator({
                         <img
                           src={item.image}
                           alt=""
+                          crossOrigin="anonymous"
                           className="h-5.5 w-5.5 object-contain"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
@@ -314,6 +315,7 @@ export default function TradeCalculator({
                         <img
                           src={item.image}
                           alt=""
+                          crossOrigin="anonymous"
                           className="h-5.5 w-5.5 object-contain"
                           onError={(e) => { e.currentTarget.style.display = 'none'; }}
                         />
