@@ -43,13 +43,35 @@ export default function App() {
         const idsA = partA ? partA.split(',') : [];
         const idsB = partB ? partB.split(',') : [];
 
-        // Find items in bssItemsData
-        const newSideA = idsA
-          .map(id => bssItemsData.find(item => item.id === id))
-          .filter(Boolean) as BSSItem[];
-        const newSideB = idsB
-          .map(id => bssItemsData.find(item => item.id === id))
-          .filter(Boolean) as BSSItem[];
+        // Helper to resolve items by ID, including dynamically generated Beequip rolls
+        const resolveItem = (id: string): BSSItem | undefined => {
+          if (id.includes('-roll-')) {
+            const [baseId, rollNameSlug] = id.split('-roll-');
+            const baseItem = bssItemsData.find(item => item.id === baseId);
+            if (baseItem && baseItem.beequipData) {
+              for (const group of baseItem.beequipData) {
+                const roll = group.rolls.find(r => r.rollName.replace(/\s+/g, '-') === rollNameSlug);
+                if (roll) {
+                  return {
+                    ...baseItem,
+                    id: id,
+                    name: `${baseItem.name} (${roll.rollName})`,
+                    englishName: `${baseItem.englishName} (${roll.rollName})`,
+                    value: roll.value,
+                    valueLow: roll.valueLow,
+                    valueHigh: roll.valueHigh,
+                    demand: roll.demand,
+                  };
+                }
+              }
+            }
+            return undefined;
+          }
+          return bssItemsData.find(item => item.id === id);
+        };
+
+        const newSideA = idsA.map(resolveItem).filter(Boolean) as BSSItem[];
+        const newSideB = idsB.map(resolveItem).filter(Boolean) as BSSItem[];
 
         if (newSideA.length > 0 || newSideB.length > 0) {
           setSideA(newSideA);
