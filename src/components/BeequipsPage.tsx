@@ -88,19 +88,85 @@ export const RU_ABBR_MAP: Record<string, string> = {
 
 const allBeequips = bssItemsData.filter(item => item.category === 'Биквипы');
 
-function getStatBadge(groupName: string): string | null {
-  const normalize = (s: string) => s.toUpperCase().replace(/[-\s]/g, '');
-  const normalizedGroup = normalize(groupName);
+export function getStatBadgesForGroup(groupName: string, rolls: any[] = []): string[] {
+  const matches: string[] = [];
+  const normalizedGroup = groupName.toLowerCase().replace(/[-\s]/g, '');
 
-  // Sort by length descending so CRAH matches before CR
-  const sorted = Object.keys(STAT_ABBR_LABELS).sort((a, b) => STAT_ABBR_LABELS[b].length - STAT_ABBR_LABELS[a].length);
-  for (const abbr of sorted) {
-    if (normalizedGroup.includes(normalize(STAT_ABBR_LABELS[abbr]))) return abbr;
+  const sortedAbbrs = Object.keys(STAT_ABBR_LABELS).sort(
+    (a, b) => STAT_ABBR_LABELS[b].length - STAT_ABBR_LABELS[a].length
+  );
+
+  for (const abbr of sortedAbbrs) {
+    const label = STAT_ABBR_LABELS[abbr].toLowerCase();
+    const normalizedLabel = label.replace(/[-\s]/g, '');
+
+    // Check if group name contains the label
+    let matched = normalizedGroup.includes(normalizedLabel);
+
+    // If not matched, check rolls
+    if (!matched) {
+      matched = rolls.some(roll => {
+        const normalizedRoll = roll.rollName.toLowerCase().replace(/[-\s]/g, '');
+        return normalizedRoll.includes(normalizedLabel);
+      });
+    }
+
+    // Special case check: check if the abbreviation itself matches standalone (e.g. HAH, WFC)
+    if (!matched) {
+      const abbrLower = abbr.toLowerCase();
+      const regex = new RegExp(`\\b${abbrLower}\\b|\\{${abbrLower}\\}`, 'i');
+      matched = regex.test(groupName) || rolls.some(roll => regex.test(roll.rollName));
+    }
+
+    if (matched) {
+      // Overlap prevention rules
+      if (abbr === 'CR' && matches.includes('CRAH')) {
+        const clean = (s: string) => s.toLowerCase().replace('convert rate at hive', '');
+        const hasIndependentCR = clean(groupName).includes('convert rate') ||
+          rolls.some(roll => clean(roll.rollName).includes('convert rate'));
+        if (!hasIndependentCR) continue;
+      }
+      
+      if (abbr === 'BP' && (matches.includes('BBP') || matches.includes('BAP') || matches.includes('BGP') || matches.includes('GBP'))) {
+        const clean = (s: string) => s.toLowerCase()
+          .replace('blue bomb pollen', '')
+          .replace('blue ability pollen', '')
+          .replace('bee gather pollen', '')
+          .replace('gold bubble pollen', '');
+        const hasIndependentBP = clean(groupName).includes('blue pollen') ||
+          rolls.some(roll => clean(roll.rollName).includes('blue pollen'));
+        if (!hasIndependentBP) continue;
+      }
+
+      if (abbr === 'RP' && matches.includes('RBA')) {
+        const clean = (s: string) => s.toLowerCase().replace('red bee attack', '');
+        const hasIndependentRP = clean(groupName).includes('red pollen') ||
+          rolls.some(roll => clean(roll.rollName).includes('red pollen'));
+        if (!hasIndependentRP) continue;
+      }
+      
+      if (abbr === 'WP' && (matches.includes('WFC') || matches.includes('WGA'))) {
+        const clean = (s: string) => s.toLowerCase()
+          .replace('white field capacity', '')
+          .replace('white gather amount', '');
+        const hasIndependentWP = clean(groupName).includes('white pollen') ||
+          rolls.some(roll => clean(roll.rollName).includes('white pollen'));
+        if (!hasIndependentWP) continue;
+      }
+
+      matches.push(abbr);
+    }
   }
-  return null;
+
+  return matches;
 }
 
-function resolveQuery(raw: string): { statAbbr: string | null; query: string } {
+export function getStatBadge(groupName: string): string | null {
+  const badges = getStatBadgesForGroup(groupName);
+  return badges.length > 0 ? badges[0] : null;
+}
+
+export function resolveQuery(raw: string): { statAbbr: string | null; query: string } {
   const q = raw.trim().toLowerCase();
   // Check Russian aliases
   if (RU_ABBR_MAP[q]) return { statAbbr: RU_ABBR_MAP[q], query: q };
@@ -145,8 +211,8 @@ export default function BeequipsPage({ lang, onAddToSideA, onAddToSideB, onSelec
 
       if (statAbbr) {
         for (const group of item.beequipData) {
-          const badge = getStatBadge(group.groupName);
-          if (badge === statAbbr) return true;
+          const badges = getStatBadgesForGroup(group.groupName, group.rolls);
+          if (badges.includes(statAbbr)) return true;
         }
         return false;
       }

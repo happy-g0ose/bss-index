@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Minus, Plus } from 'lucide-react';
-import { transliterate } from './BeequipsPage';
+import { transliterate, resolveQuery, getStatBadgesForGroup } from './BeequipsPage';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
 import { t, translateDemand, translateCategory, translateRarity } from '../locales';
@@ -220,15 +220,24 @@ export default function ItemCard({ item, onClick, onAddToSideA, onAddToSideB, in
           searchQuery && item.beequipData && (() => {
             const raw = searchQuery.trim().toLowerCase();
             const transRaw = transliterate(raw);
+            const { statAbbr } = resolveQuery(raw);
             if (!raw) return null;
             
             const matches: any[] = [];
             item.beequipData.forEach(group => {
-              group.rolls.forEach(roll => {
-                if (roll.rollName.toLowerCase().includes(raw) || roll.rollName.toLowerCase().includes(transRaw)) {
-                  matches.push(roll);
-                }
-              });
+              const badges = getStatBadgesForGroup(group.groupName, group.rolls);
+              const isStatMatch = statAbbr && badges.includes(statAbbr);
+              const isGroupMatch = group.groupName.toLowerCase().includes(raw) || group.groupName.toLowerCase().includes(transRaw);
+
+              if (isStatMatch || isGroupMatch) {
+                matches.push(...group.rolls);
+              } else {
+                group.rolls.forEach(roll => {
+                  if (roll.rollName.toLowerCase().includes(raw) || roll.rollName.toLowerCase().includes(transRaw)) {
+                    matches.push(roll);
+                  }
+                });
+              }
             });
             
             if (matches.length === 0) return null;

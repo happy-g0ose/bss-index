@@ -5,7 +5,7 @@ import { bssItemsData } from '../data/items';
 import type { BSSItem } from '../data/items';
 import type { Language } from '../locales';
 import { translateRarity } from '../locales';
-import { STAT_ABBR_LABELS, RU_ABBR_MAP, transliterate } from './BeequipsPage';
+import { STAT_ABBR_LABELS, RU_ABBR_MAP, transliterate, getStatBadgesForGroup } from './BeequipsPage';
 
 interface CommandMenuProps {
   isOpen: boolean;
@@ -27,14 +27,6 @@ function parseAbbrQuery(raw: string): { abbr: string | null } {
   return { abbr: null };
 }
 
-function getStatBadgeFromGroup(groupName: string): string | null {
-  const upper = groupName.toUpperCase();
-  const sorted = Object.keys(STAT_ABBR_LABELS).sort((a, b) => b.length - a.length);
-  for (const abbr of sorted) {
-    if (upper.includes(abbr)) return abbr;
-  }
-  return null;
-}
 
 export default function CommandMenu({ isOpen, setIsOpen, onSelectItem, lang }: CommandMenuProps) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -88,7 +80,7 @@ export default function CommandMenu({ isOpen, setIsOpen, onSelectItem, lang }: C
   const filteredBeequips = statAbbr
     ? bssItemsData.filter(item => {
         if (item.category !== 'Биквипы' || !item.beequipData) return false;
-        return item.beequipData.some(g => getStatBadgeFromGroup(g.groupName) === statAbbr);
+        return item.beequipData.some(g => getStatBadgesForGroup(g.groupName, g.rolls).includes(statAbbr));
       })
     : searchQuery.trim().length > 0
       ? bssItemsData.filter(item => {
