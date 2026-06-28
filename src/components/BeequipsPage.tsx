@@ -24,7 +24,7 @@ export const STAT_ABBR_LABELS: Record<string, string> = {
   BFT: 'Bond From Treats',
   BGP: 'Bee Gather Pollen',
   BMS: 'Bee Movespeed',
-  CC: 'Critical Chance',
+  CC: 'Critical Power',
   CR: 'Convert Rate',
   CRAH: 'Convert Rate at Hive',
   GBP: 'Gold Bubble Pollen',

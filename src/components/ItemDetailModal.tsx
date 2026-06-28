@@ -422,10 +422,11 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
                     const tooltipLeft = `${(activePoint.x / sparkline.width) * 100}%`;
                     const tooltipTop = `${(activePoint.y / sparkline.height) * 100}%`;
                     
+                    const lastIndex = item.historicalPrices.length - 1;
                     let transformStr = 'translateX(-50%)';
                     if (hoveredPointIndex === 0) {
                       transformStr = 'translateX(10px)';
-                    } else if (hoveredPointIndex === 5) {
+                    } else if (hoveredPointIndex === lastIndex) {
                       transformStr = 'translateX(-105%)';
                     }
                     
