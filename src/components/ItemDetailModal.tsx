@@ -280,7 +280,7 @@ export default function ItemDetailModal({ item, onClose, onAddToSideA, onAddToSi
 
                           return (
                             <div key={rIdx} className="flex items-center justify-between gap-3 text-xs p-2 rounded-lg bg-neutral-900/40 hover:bg-neutral-900/80 transition-colors border border-white/5">
-                              <span className="font-medium text-neutral-200 truncate pr-2 max-w-[140px] md:max-w-[200px]" title={roll.rollName}>
+                              <span className="font-medium text-neutral-200 flex-1 min-w-0 truncate pr-2" title={roll.rollName}>
                                 {roll.rollName}
                               </span>
                               <div className="flex items-center gap-2 shrink-0">
