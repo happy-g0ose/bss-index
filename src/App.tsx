@@ -29,7 +29,17 @@ export default function App() {
   const [isCommandMenuOpen, setIsCommandMenuOpen] = useState(false);
   const [isAuthorsModalOpen, setIsAuthorsModalOpen] = useState(false);
   
-  const [lang, setLang] = useState<Language>('ru');
+  const [lang, setLangState] = useState<Language>(() => {
+    const saved = localStorage.getItem('bss_lang') as Language;
+    if (saved === 'ru' || saved === 'en') return saved;
+    const browserLang = navigator.language || '';
+    return browserLang.toLowerCase().startsWith('ru') ? 'ru' : 'en';
+  });
+
+  const setLang = (newLang: Language) => {
+    localStorage.setItem('bss_lang', newLang);
+    setLangState(newLang);
+  };
   const [activeTab, setActiveTab] = useState<TabType>('home');
 
   // Sync trade calculator data from localStorage (optional persistence for good UX)
